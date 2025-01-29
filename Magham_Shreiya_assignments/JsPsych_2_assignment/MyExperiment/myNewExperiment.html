@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My New Experiment</title>
+    <!-- here, we're loading in jsPsych, the html-keyboard-response plugin, the image-keyboard-response plugin, the preload plugin, and jspsych.css file / stylesheet -->
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-image-keyboard-response.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+  
+    /* initializing jsPsych */
+      var jsPsych = initJsPsych({
+        on_finish: function() {
+                jsPsych.data.displayData();
+              }
+            });
+  
+    /* creating timeline */
+      var timeline = [];
+
+/* PRELOADING MEDIA */
+
+    /* preloading the 2 stimulus images -- the image pathways are: 'img/blueSquare.png' for the blue square, and 'img/orange.png' for the orange circle */
+      var preload = {
+        type: jsPsychPreload,
+        images: ['img/blueSquare.png', 'img/orange.png']
+      };
+      timeline.push(preload);
+
+/* WELCOME MESSAGE */    
+    
+    /* defining welcome message trial */
+      var welcome = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Welcome to the experiment. Press any key to begin."
+      };
+    /* pushing  welcome trial to timeline */
+      timeline.push(welcome);
+      
+/* INSTRUCTIONS */
+
+    /* defining instructions trial -- displays instructions to participant; here we are resizing the image of the orange circle to be half of its original diameter (i.e. we're changing its original pixel dimensions of 300px*300px to 150px*150px). the blue square has also been resized to control for the potential confounding factor of stimulus size. */
+    
+      var instructions = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+          <p>In this experiment, a blue square or orange circle will appear in the center of the screen.</p>
+          <p>If a <strong>blue square</strong> appears on your screen, press the letter F on the keyboard as fast as you can.</p>
+          <p>If an <strong>orange circle</strong> appears on your screen, press the letter J
+          as fast as you can.</p>
+          <div style='width: 800px;'>
+          <div style='float: left;'><img src='img/blueSquare.png' width='150' height='150'></img>
+          <p class='small'><strong>Press the F key</strong></p></div>
+          <div style='float: right;'><img src='img/orange.png' width='150' height='150'></img>
+          <p class='small'><strong>Press the J key</strong></p></div>
+          </div>
+          <p>Press any key to begin.</p>
+        `,
+        post_trial_gap: 2000
+      };
+    /* pushing instructions trial to timeline */
+      timeline.push(instructions);
+    
+/* DISPLAYING STIMULI AND GETTING RESPONSES USING TIMELINE VARIABLES */
+
+    /* making array with the 2 test trials (2 stimuli: blue squares and orange circles), and specifying the correct_response propetry for each of the objects: 'f' for blue squares, 'j' for orange circles. */
+      var test_stimuli = [
+        { stimulus: "img/blueSquare.png", correct_response: 'f'},
+        { stimulus: "img/orange.png", correct_response: 'j'}
+      ];
+
+    /* displaying fixation cross between trials. the manipulation here is still the duration time of the fixation trial. we're observing the effect of duration time of the fixation trials on response times to the orange circle and blue square stimuli. */
+      var fixation = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: '<div style="font-size:60px;">+</div>',
+        choices: "NO_KEYS",
+        trial_duration: function () {
+          return jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
+        },
+        data: {
+          task: 'fixation'
+        }
+      };
+
+    /* defining test trials -- here, we will be able to show the stimuli (blue squares, orange circles) to participants using the function jsPsych.timelineVariable(). the stimulus height and width have been adjusted such that the orange circle is half of its original diameter. once again, the stimulus height and width will be kept constant for the blue square and orange circle, such that the factor of stimulus size does not confound the experiment's results. */
+    
+      var test = {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['f', 'j'],
+        stimulus_height: 150,
+        stimulus_width: 150,
+        data: {
+          task: 'response',
+          correct_response: jsPsych.timelineVariable('correct_response')
+        },
+        on_finish: function(data){
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+        }
+      };
+      
+    /* creating new timeline and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(); randomizing stimulus presentation order; repeating trials (10 times). */
+      var test_procedure = {
+        timeline: [fixation, test],
+        timeline_variables: test_stimuli,
+        randomize_order: true,
+        repetitions: 5
+      };
+      timeline.push(test_procedure);
+      
+/* DEBRIEF */
+
+    /* defining final trial (debrief_block) to give the participant feedback on their accuracy and mean response times (in ms) for BOTH blue squares and orange circles. as well, the debrief trial will tell the participants whether they were faster / slower / the same in their reaction times to the blue squares vs orange circles. lastly, participants will obtain the difference between their response times for the blue squares and orange circle stimuli. */
+    
+      var debrief_block = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: function() {
+      
+          var trials = jsPsych.data.get().filter({task: 'response'});
+          var correct_trials = trials.filter({correct: true});
+          var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+          
+        /* rt for just trials with correct responses to the blue square stimulus */
+          var correct_trials_blueSquare = trials.filter({correct:true, correct_response:'f'});
+          var rtBlueSquare = Math.round(correct_trials_blueSquare.select('rt').mean());
+
+        /* rt for just trials with correct responses to the orange circle stimulus */
+          var correct_trials_orangeCircle = trials.filter({correct:true, correct_response:'j'});
+          var rtOrangeCircle = Math.round(correct_trials_orangeCircle.select('rt').mean());
+          
+        /* calculating the difference in the reaction times between the two trial types (orange circle, blue square), different based on condition. */
+          var RT_diffs;
+            if (rtBlueSquare > rtOrangeCircle){
+              RT_diffs = rtBlueSquare-rtOrangeCircle
+            } else if (rtBlueSquare < rtOrangeCircle) {
+              RT_diffs = rtOrangeCircle-rtBlueSquare
+            }else{
+              RT_diffs = 0
+            };
+            
+        /* statement of which of the trial types participants were faster in reacting to the stimulus, different statements based on the condition. note: lower rt = faster. */       
+          var RT_speeds;
+            if(rtBlueSquare < rtOrangeCircle){
+              RT_speeds = "your average response time was faster for the blue square trials than for orange circle trials."
+            }else if (rtBlueSquare > rtOrangeCircle){
+              RT_speeds = "your average response time was faster for the orange circle trials than for the blue square trials."
+            }else{
+              RT_speeds = "the difference between your average response time for the blue square trials compared to the orange circle trials was negligible."
+            };
+
+          return `<p>You responded correctly on ${accuracy}% of the trials.</p>
+            <p>Your average response time was ${rtBlueSquare}ms for the blue square trials, and ${rtOrangeCircle}ms for orange circle trials.</p>
+            <p> This means that ${RT_speeds}</p>             
+            <p> The overall difference between your response times for the blue square trials and orange circle trials was approximately ${RT_diffs}ms.</p>
+            <p>Thank you for participating in this experiment! Press any key to complete the experiment.</p>`;
+      
+        }
+      };
+      
+    /* adding debrief_block trial to timeline */
+      timeline.push(debrief_block);
+    
+    /* run experiment -- use the jsPsych.run() function */
+      jsPsych.run(timeline);
+
+  </script>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <!-- here, we're loading in jsPsych, the html-keyboard-response plugin, the image-keyboard-response plugin, the preload plugin, and jspsych.css file / stylesheet -->
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-image-keyboard-response.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+  
+    /* initializing jsPsych, and adding a function with .displayData() (which will execute at the end of the experiment)*/
+      var jsPsych = initJsPsych({
+        on_finish: function() {
+                jsPsych.data.displayData();
+              }
+            });
+  
+    /* creating timeline (which contains the set of trials to be run for the experiment) */
+      var timeline = [];
+
+/* PRELOADING MEDIA */
+
+    /* preloading the 2 stimulus images (so that there is no lag from downloading in the participant's browser) */
+      var preload = {
+        type: jsPsychPreload,
+        images: ['img/blue.png', 'img/orange.png']
+      };
+    /* add to timeline */
+      timeline.push(preload);
+
+/* WELCOME MESSAGE */    
+      
+    /* defining the trial for the welcome message -- the 'type' parameter tells jsPsych what plugin to use, and the 'stimulus' parameter contains the string displayed to the participant) */
+      var welcome = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Welcome to the experiment. Press any key to begin."
+      };
+    /* push the welcome trial to the timeline to add it to the end of the array */
+      timeline.push(welcome);
+      
+/* INSTRUCTIONS */
+
+    /* defining the instructions trial -- this trial displays the experiment's instructions to the participant. Additionally, there will be a post-trial gap of 2 seconds. */
+    
+      var instructions = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+          <p>In this experiment, a circle will appear in the center 
+          of the screen.</p><p>If the circle is <strong>blue</strong>, 
+          press the letter F on the keyboard as fast as you can.</p>
+          <p>If the circle is <strong>orange</strong>, press the letter J 
+          as fast as you can.</p>
+          <div style='width: 700px;'>
+          <div style='float: left;'><img src='img/blue.png'></img>
+          <p class='small'><strong>Press the F key</strong></p></div>
+          <div style='float: right;'><img src='img/orange.png'></img>
+          <p class='small'><strong>Press the J key</strong></p></div>
+          </div>
+          <p>Press any key to begin.</p>
+        `,
+        post_trial_gap: 2000
+      };
+      
+    /* adding instructions trial to timeline */
+      timeline.push(instructions);
+    
+/* DISPLAYING STIMULI AND GETTING RESPONSES USING TIMELINE VARIABLES */
+
+    /* making array with the 2 test trials (2 stimuli: blue and orange circles; stimulus parameter = path to image file). additionally, we are adding the correct_response property for each of the objects ('f' for blue circles, 'j' for orange circles). */
+      var test_stimuli = [
+        { stimulus: "img/blue.png", correct_response: 'f'},
+        { stimulus: "img/orange.png", correct_response: 'j'}
+      ];
+
+    /* displaying fixation cross '+' between trials. setting the choices parameter to NO_KEYS means that no responses will be accepted for the duration of the trial. additionally, here we're using a function to have a different duration time for every trial. the function samples without replacement from the array of duration times. lastly, we're tagging the fixation trial to make removing this data easier later. */
+      var fixation = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: '<div style="font-size:60px;">+</div>',
+        choices: "NO_KEYS",
+        trial_duration: function () {
+          return jsPsych.randomization.sampleWithoutReplacement([250, 500, 750, 1000, 1250, 1500, 1750, 2000], 1)[0];
+        },
+        data: {
+          task: 'fixation'
+        }
+      };
+
+    /* displaying the stimuli -- here, we're using jsPsych.timelineVariable() to substitute in the value of parameter from the timeline variables for the stimulus parameter; the choices parameter indicates the keys that the participant can use to respond. we're also tagging this as a 'response' trial, and tagging it with the 'correct_response' property. lastly, the on_finish event and the assigned function will receive objects with data from each trial.*/
+      var test = {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['f', 'j'],
+        data: {
+          task: 'response',
+          correct_response: jsPsych.timelineVariable('correct_response')
+        },
+        on_finish: function(data){
+          data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+        }
+      };
+      
+    /* note: data.response = string representation of the key pressed by participant; data.correct_response = the correct key that the participant should press; data.correct = comparing data.correct_response and data.response */
+      
+    /* creating new timeline and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(). here, we're also randomizing the order of stimulus presentation, and repeating the test phase for 10 test trials in total. */
+      var test_procedure = {
+        timeline: [fixation, test],
+        timeline_variables: test_stimuli,
+        randomize_order: true,
+        repetitions: 5
+      };
+
+    /* adding test_procedure trial to timeline (don't need to add the fixation and test trial because they're already on the test_procedure timeline) */
+      timeline.push(test_procedure);
+      
+/* DEBRIEF */
+
+    /* defining final trial (debrief_block) to tell the participant their accuracy and mean response time (in ms) for correct responses. */
+    
+      var debrief_block = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: function() {
+          var trials = jsPsych.data.get().filter({task: 'response'});
+          var correct_trials = trials.filter({correct: true});
+          var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+          var rt = Math.round(correct_trials.select('rt').mean());
+      
+          return `<p>You responded correctly on ${accuracy}% of the trials.</p>
+            <p>Your average response time was ${rt}ms.</p>
+            <p>Press any key to complete the experiment. Thank you!</p>`;
+      
+        }
+      };
+      
+/*jsPsych.data.get returns jsPsych data collection containing data from all experiments; here, we created the variable 'trials' with it. trials contains only the data from the trials where a circle stimulus was shown. '.filter()' selects only the trials where task is 'response.' we can also use it to select from trials data collection where the property 'correct' = true. for calculating accuracy, we use .count() to determine how many trials there were in total. we use Math.round() to avoid digits after decimal. lastly, to calculate mean RT on correct trials, we use .select('rt') on the correct_trials data. then, we use the .mean() function to find the mean of all the RT values. */  
+      
+    /* adding debrief_block trial to timeline */
+      timeline.push(debrief_block);
+    
+    /* run experiment -- use the jsPsych.run() function */
+      jsPsych.run(timeline);
+
+  </script>
+</html>
