@@ -24,7 +24,8 @@
 
 /* PRELOADING MEDIA */
 
-    /* preloading the 2 stimulus images -- the image pathways are: 'img/blueSquare.png' for the blue square, and 'img/orange.png' for the orange circle */
+    /* preloading the 2 stimulus images -- the image pathways are: 'img/blueSquare.png'
+    for the blue square, and 'img/orange.png' for the orange circle */
       var preload = {
         type: jsPsychPreload,
         images: ['img/blueSquare.png', 'img/orange.png']
@@ -77,7 +78,8 @@
       ];
 
     /* displaying fixation cross between trials. one of the manipulations here is the duration time of the fixation. 
-    in addition to the colour of the stimulus being an independent variable, we're observing the effect of the duration times of the fixation trials on participants' reaction times to the orange circle and blue square stimuli. */
+    in addition to the characteristics of the stimulus being an independent variable, we're observing the effect of the 
+    duration times of the fixation trials on participants' reaction times to the orange circle and blue square stimuli. */
       var fixation = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: '<div style="font-size:60px;">+</div>',
@@ -92,7 +94,8 @@
 
     /* defining test trials -- here, we will be able to show the stimuli (blue squares, orange circles) to participants using the function jsPsych.timelineVariable(). 
     the stimulus height and width have been adjusted such that the orange circle is half of its original diameter. 
-    like in the instructions trial, the stimulus height and width will be kept constant for the blue square and orange circle, such that the factor of stimulus size does not confound the experiment's results. */
+    like in the instructions trial, the stimulus height and width will be kept constant for the blue square and orange circle, 
+    such that the factor of stimulus size does not confound the experiment's results. */
     
       var test = {
         type: jsPsychImageKeyboardResponse,
@@ -109,7 +112,9 @@
         }
       };
       
-    /* creating new timeline, and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(); randomizing stimulus presentation order; repeating trials (10 times). */
+    /* creating new timeline, and setting timeline_variables property to link variables in 
+    'test_stimuli' array with jsPsych.timelineVariable(); randomizing stimulus presentation order; repeating trials (10 times). */
+    
       var test_procedure = {
         timeline: [fixation, test],
         timeline_variables: test_stimuli,
@@ -120,9 +125,12 @@
       
 /* DEBRIEF */
 
-    /* defining final trial (debrief_block) to give the participant feedback on their accuracy (in %) and mean response times (in ms) for BOTH blue squares and orange circles. 
-    as well, the debrief trial will tell the participants whether they were faster or slower or similar in their reaction times to the blue squares and orange circles.
-    lastly, participants will obtain the value of the difference between their average response times to the blue squares and orange circle stimuli. */
+    /* defining final trial (debrief_block) to give the participant feedback on their accuracy (in %) and mean 
+    response times (in ms) for BOTH blue squares and orange circles. 
+    as well, the debrief trial will tell the participants whether they were faster or slower or similar in their 
+    reaction times to the blue squares and orange circles.
+    lastly, participants will obtain the value of the difference between their average 
+    response times to the blue squares and orange circle stimuli. */
     
       var debrief_block = {
         type: jsPsychHtmlKeyboardResponse,
@@ -140,7 +148,8 @@
           var correct_trials_orangeCircle = trials.filter({correct:true, correct_response:'j'});
           var rtOrangeCircle = Math.round(correct_trials_orangeCircle.select('rt').mean());
           
-        /* calculating the difference in the reaction times between the two trial types (orange circle, blue square); different based on condition. */
+        /* calculating the difference in the reaction times between the two 
+        trial types (orange circle, blue square); different based on condition. */
           var RT_diffs;
             if (rtBlueSquare > rtOrangeCircle){
               RT_diffs = rtBlueSquare-rtOrangeCircle
@@ -150,7 +159,8 @@
               RT_diffs = 0
             };
             
-        /* statement of which of the trial types participants were faster in reacting to the stimulus, different statements based on the condition. note: lower rt = faster. */       
+        /* statement of which of the trial types participants were 
+        faster in reacting to the stimulus, different statements based on the condition. note: lower rt = faster. */       
           var RT_speeds;
             if(rtBlueSquare < rtOrangeCircle){
               RT_speeds = "your average response time was faster for the blue square trials than for orange circle trials."
@@ -162,8 +172,8 @@
 
           return `<p>You responded correctly on ${accuracy}% of the trials.</p>
             <p>Your average response time was ${rtBlueSquare}ms for the blue square trials, and ${rtOrangeCircle}ms for orange circle trials.</p>
-            <p> This means that ${RT_speeds}</p>             
-            <p> The overall difference between your response times for the blue square trials and orange circle trials was approximately ${RT_diffs}ms.</p>
+            <p>This means that ${RT_speeds}</p>             
+            <p>The overall difference between your average response times for the blue square trials and orange circle trials was approximately ${RT_diffs}ms.</p>
             <p>Thank you for participating in this experiment! Press any key to complete the experiment.</p>`;
       
         }

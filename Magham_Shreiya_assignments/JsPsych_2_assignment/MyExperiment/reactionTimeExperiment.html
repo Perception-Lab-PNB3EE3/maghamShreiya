@@ -96,7 +96,8 @@
         }
       };
 
-    /* displaying the stimuli -- here, we're using jsPsych.timelineVariable() to substitute in the value of parameter from the timeline variables for the stimulus parameter; 
+    /* displaying the stimuli -- here, we're using jsPsych.timelineVariable() to substitute in the 
+    value of parameter from the timeline variables for the stimulus parameter; 
     the choices parameter indicates the keys that the participant can use to respond.
     we're also tagging this as a 'response' trial, and tagging it with the 'correct_response' property. 
     lastly, the on_finish event and the assigned function will receive objects with data from each trial.*/
@@ -116,7 +117,8 @@
     /* note: data.response = string representation of the key pressed by participant; data.correct_response = the correct key that the participant should press;
     data.correct = comparing data.correct_response and data.response */
       
-    /* creating new timeline and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(). 
+    /* creating new timeline and setting timeline_variables property to link variables in 'test_stimuli' 
+    array with jsPsych.timelineVariable(). 
     here, we're also randomizing the order of stimulus presentation, and repeating the test phase for 10 test trials in total. */
       var test_procedure = {
         timeline: [fixation, test],
@@ -125,12 +127,14 @@
         repetitions: 5
       };
 
-    /* adding test_procedure trial to timeline (don't need to add the fixation and test trial because they're already on the test_procedure timeline) */
+    /* adding test_procedure trial to timeline (don't need to add the fixation 
+    and test trial because they're already on the test_procedure timeline) */
       timeline.push(test_procedure);
       
 /* DEBRIEF */
 
-    /* defining final trial (debrief_block) to show the participant their accuracy (in %) and mean response time (in ms) for correct responses. */
+    /* defining final trial (debrief_block) to show the participant their 
+    accuracy (in %) and mean response time (in ms) for correct responses. */
     
       var debrief_block = {
         type: jsPsychHtmlKeyboardResponse,
@@ -149,10 +153,12 @@
       
 /*jsPsych.data.get() returns jsPsych data collection containing data from all experiments; 
 here, we created the variable 'trials' with it. trials contains only the data from the trials where a circle stimulus was shown. 
-'.filter()' selects only the trials where the task is 'response.' we can also use it to select from trials data collection where the property 'correct' = true. 
+'.filter()' selects only the trials where the task is 'response.' 
+we can also use it to select from trials data collection where the property 'correct' = true. 
 for calculating accuracy, we use .count() to determine how many trials there were in total. 
 we use Math.round() to avoid digits after decimal. 
-lastly, to calculate mean RT on correct trials, we use .select('rt') on the correct_trials data. then, we use the .mean() function to find the mean of all the RT values. */  
+lastly, to calculate mean RT on correct trials, we use .select('rt') on the correct_trials data. 
+then, we use the .mean() function to find the mean of all the RT values. */  
       
     /* adding debrief_block trial to timeline */
       timeline.push(debrief_block);
