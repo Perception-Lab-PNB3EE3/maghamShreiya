@@ -43,7 +43,9 @@
       
 /* INSTRUCTIONS */
 
-    /* defining instructions trial -- displays instructions to participant; here we are resizing the image of the orange circle to be half of its original diameter (i.e. we're changing its original pixel dimensions of 300px*300px to 150px*150px). the blue square has also been resized to control for the potential confounding factor of stimulus size. */
+    /* defining instructions trial -- displays instructions to participant; here we are resizing the image of the orange circle to be 
+    half of its original diameter (i.e. we're changing its original pixel dimensions of 300px*300px to 150px*150px). 
+    the blue square has also been resized to control for the potential confounding factor of stimulus size. */
     
       var instructions = {
         type: jsPsychHtmlKeyboardResponse,
@@ -67,13 +69,15 @@
     
 /* DISPLAYING STIMULI AND GETTING RESPONSES USING TIMELINE VARIABLES */
 
-    /* making array with the 2 test trials (2 stimuli: blue squares and orange circles), and specifying the correct_response propetry for each of the objects: 'f' for blue squares, 'j' for orange circles. */
+    /* making array with the 2 test trials (2 stimuli: blue squares and orange circles), and specifying the correct_response 
+    property for each of the objects: 'f' for blue squares, 'j' for orange circles. */
       var test_stimuli = [
         { stimulus: "img/blueSquare.png", correct_response: 'f'},
         { stimulus: "img/orange.png", correct_response: 'j'}
       ];
 
-    /* displaying fixation cross between trials. the manipulation here is still the duration time of the fixation trial. we're observing the effect of duration time of the fixation trials on response times to the orange circle and blue square stimuli. */
+    /* displaying fixation cross between trials. one of the manipulations here is the duration time of the fixation. 
+    in addition to the colour of the stimulus being an independent variable, we're observing the effect of the duration times of the fixation trials on participants' reaction times to the orange circle and blue square stimuli. */
       var fixation = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: '<div style="font-size:60px;">+</div>',
@@ -86,7 +90,9 @@
         }
       };
 
-    /* defining test trials -- here, we will be able to show the stimuli (blue squares, orange circles) to participants using the function jsPsych.timelineVariable(). the stimulus height and width have been adjusted such that the orange circle is half of its original diameter. once again, the stimulus height and width will be kept constant for the blue square and orange circle, such that the factor of stimulus size does not confound the experiment's results. */
+    /* defining test trials -- here, we will be able to show the stimuli (blue squares, orange circles) to participants using the function jsPsych.timelineVariable(). 
+    the stimulus height and width have been adjusted such that the orange circle is half of its original diameter. 
+    like in the instructions trial, the stimulus height and width will be kept constant for the blue square and orange circle, such that the factor of stimulus size does not confound the experiment's results. */
     
       var test = {
         type: jsPsychImageKeyboardResponse,
@@ -103,7 +109,7 @@
         }
       };
       
-    /* creating new timeline and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(); randomizing stimulus presentation order; repeating trials (10 times). */
+    /* creating new timeline, and setting timeline_variables property to link variables in 'test_stimuli' array with jsPsych.timelineVariable(); randomizing stimulus presentation order; repeating trials (10 times). */
       var test_procedure = {
         timeline: [fixation, test],
         timeline_variables: test_stimuli,
@@ -114,7 +120,9 @@
       
 /* DEBRIEF */
 
-    /* defining final trial (debrief_block) to give the participant feedback on their accuracy and mean response times (in ms) for BOTH blue squares and orange circles. as well, the debrief trial will tell the participants whether they were faster / slower / the same in their reaction times to the blue squares vs orange circles. lastly, participants will obtain the difference between their response times for the blue squares and orange circle stimuli. */
+    /* defining final trial (debrief_block) to give the participant feedback on their accuracy (in %) and mean response times (in ms) for BOTH blue squares and orange circles. 
+    as well, the debrief trial will tell the participants whether they were faster or slower or similar in their reaction times to the blue squares and orange circles.
+    lastly, participants will obtain the value of the difference between their average response times to the blue squares and orange circle stimuli. */
     
       var debrief_block = {
         type: jsPsychHtmlKeyboardResponse,
@@ -124,15 +132,15 @@
           var correct_trials = trials.filter({correct: true});
           var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
           
-        /* rt for just trials with correct responses to the blue square stimulus */
+        /* average rt for just trials with correct responses to the blue square stimulus */
           var correct_trials_blueSquare = trials.filter({correct:true, correct_response:'f'});
           var rtBlueSquare = Math.round(correct_trials_blueSquare.select('rt').mean());
 
-        /* rt for just trials with correct responses to the orange circle stimulus */
+        /* average rt for just trials with correct responses to the orange circle stimulus */
           var correct_trials_orangeCircle = trials.filter({correct:true, correct_response:'j'});
           var rtOrangeCircle = Math.round(correct_trials_orangeCircle.select('rt').mean());
           
-        /* calculating the difference in the reaction times between the two trial types (orange circle, blue square), different based on condition. */
+        /* calculating the difference in the reaction times between the two trial types (orange circle, blue square); different based on condition. */
           var RT_diffs;
             if (rtBlueSquare > rtOrangeCircle){
               RT_diffs = rtBlueSquare-rtOrangeCircle
