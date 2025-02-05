@@ -1,0 +1,212 @@
+---
+title: "Data Visualization Analyses"
+output: html_document
+---
+
+Step 2: Here, I have loaded in the assignment_dataVis_dataset.csv file using the read.csv() 
+function, and saved it to the variable 'data'. I also used the View() function to take 
+a look at the data in the file.
+
+```{r}
+
+setwd("/Users/shreiya/Downloads")
+data<-read.csv("assignment_dataVis_dataset.csv",header=TRUE)
+
+View(data)
+
+```
+
+Step 3: Next, I printed the summary stats for each of the 4 conditions in the 
+dataset (note: first I had to save 'condition' as a factor, rather than character. 
+This enabled me to have more efficient code). 
+
+Summary statistics I calculated include the means and the standard deviations for 
+both the x and y values for each condition, as well as the size (n) of each condition.
+
+SUMMARY STATISTICS:
+```{r}
+
+summary(data) #data summary 
+data$condition <- as.factor(data$condition) #saving 'condition' as factor
+
+summary(data) # n for each condition = 142
+
+#find the means for each condition in the data set (x):
+(conditions_mean_x <- with(data, tapply(x, condition, mean)))
+
+#find the means for each condition in the data set (y):
+(conditions_mean_y <- with(data, tapply(y, condition, mean)))
+
+#find the SD for each condition in the data set (x):
+(conditions_sd_x <- with(data, tapply(x, condition, sd)))
+
+#find the SD for each condition in the data set (y):
+(conditions_sd_y <- with(data, tapply(y, condition, sd)))
+
+```
+
+Step 4: Then, I visualized the data / results of each condition using scatter plots. I also 
+found the Pearson's correlation coefficient (r) for each of the conditions.
+
+DATA VISUALIZATION:
+```{r}
+
+library(ggplot2)     
+
+df_condition_1 <- data[rownames(data)[c(1:142)],] #creating a data frame containing only the data points for condition 1
+df_condition_2 <- data[rownames(data)[c(143:284)],] #creating a data frame containing only the data points for condition 2
+df_condition_3 <- data[rownames(data)[c(285:426)],] #creating a data frame containing only the data points for condition 3
+df_condition_4 <- data[rownames(data)[c(427:568)],] #creating a data frame containing only the data points for condition 4
+
+```
+
+
+```{r}
+
+#PLOT 1#
+ggplot(df_condition_1, aes(x, y)) +
+  geom_point() +
+  theme_bw()+
+  labs(
+    title = "Condition 1 - Data Visualization (Dinosaur)",
+    x = "x",
+    y = "y",
+    color="Gears"
+    ) +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13))#visualization of the data for just condition 1; configuration of the data points for condition 1 resembles the shape of a dinosaur (t-rex) when visualized as a scatter plot
+
+#PLOT 2#
+ggplot(df_condition_2, aes(x, y)) +
+  geom_point()+
+  theme_bw()+
+  labs(
+    title = "Condition 2 - Data Visualization (Eye)",
+    x = "x",
+    y = "y",
+    color="Gears"
+    ) +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13)) #visualization of the data for just condition 2; configuration of the data points for condition 2 resembles the shape of an eye when visualized as a scatter plot
+
+#PLOT 3#
+ggplot(df_condition_3, aes(x, y)) +
+  geom_point()+
+  theme_bw()+
+  labs(
+    title = "Condition 3 - Data Visualization (Parallel Diagonal Lines)",
+    x = "x",
+    y = "y",
+    color="Gears"
+    ) +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13)) #visualization of the data for just condition 3; configuration of the data points for condition 3 resemble five diagonal lines that are parallel when visualized as a scatter plot
+
+#PLOT 4#
+ggplot(df_condition_4, aes(x, y)) +
+  geom_point()+
+  theme_bw()+
+  labs(
+    title = "Condition 4 - Data Visualization (Star)",
+    x = "x",
+    y = "y",
+    color="Gears"
+    ) +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13)) #visualization of the data for just condition 4 ; configuration of the data points for condition 4 resemble the shape of a star when visualized as a scatter plot
+```
+
+
+DETERMINING PEARSON'S CORRELATION COEFFICIENT (r) FOR EACH OF THE CONDITIONS:
+```{r}
+
+#r value for condition 1:
+cor(df_condition_1$x, df_condition_1$y, method="pearson") # r = -0.06447185 (very weak negative correlation)
+
+#r value for condition 2:
+cor(df_condition_2$x, df_condition_2$y, method="pearson") # r = -0.06858639 (also very weak negative correlation)
+
+#r value for condition 3:
+cor(df_condition_3$x, df_condition_3$y, method="pearson") # r = -0.06860921 (also very weak negative correlation)
+
+#r value for for condition 4
+cor(df_condition_4$x, df_condition_4$y, method="pearson") # r = -0.0629611 (also very weak negative correlation)
+```
+
+
+Step 5: Questions
+
+a. What can be concluded from the dataset?
+
+For condition 1, when y is plotted against x in a scatter plot, the data points 
+have a configuration that resembles the shape of a dinosaur (a T-Rex). For condition 2, 
+the data points that were plotted as a scatter plot have a configuration that resembles 
+the shape of an eye. For condition 3, the data points in the scatter plot take on the 
+configuration of five diagonal lines that are parallel to each other. For condition 4, 
+the data points in the scatter plot resemble the shape of a star. There appears to be an 
+extremely weak negative correlation between the variables x and y for each of the 4 conditions.
+
+b. What did you find most challenging about this assignment?
+
+I found it challenging to find ways to be more efficient with my code. Initially, I 
+left the "conditions" column of the data frame in the assignment_dataVis_dataset.csv file 
+as their default datatype of "character" rather than "factor," and needed to calculate 
+all of the summary stats for each of the conditions separately. But, saving "condition" 
+as a factor enabled me to calculate the means and SDs for each condition in one line 
+of code (using the tapply() function).
+
+I also found it slightly challenging to try and knit the R notebook file into an 
+HTML file. I had to download something called XQuartz, which allowed me to finally knit the file.
+
+c. What did you learn in completing this assignment? What are you still curious about?
+
+I learned more about R notebook, and how it combines elements of R with a markdown 
+file. This makes things simpler and more intuitive, not only for myself, but also 
+such that others can follow along with what I'm doing much more easily. This promotes 
+a "reproducible workflow" which we learned was crucial for research. 
+
+I also learned about the basic principles of data visualization. For instance, I 
+learned I that I should be try to facilitate comparison between the various elements 
+of my visualized data (for instance, I can vary the spatial/physical characteristics 
+of data points to facilitate people in making comparisons). I also learned that it is
+a good practice during data visualization to visualize variability (i.e., horizontal 
+and/or vertical 95% CI / SD error bars). I learned that ggplot is often great at being 
+minimalistic yet impactful in the presented data (which is another principle of data visualization). 
+
+d. Why is it important to visualize data?
+
+Visualizing data is crucial in experimental research. It enables us to visualize 
+relationships that are difficult to see when just looking at numerical, raw data 
+(especially when there are hundreds or thousands of entries within a data frame). 
+This is known as confirmatory data visualization. Data visualization also enables 
+us to catch any errors in data entry more easily, through quick visual inspection 
+(i.e., if you've inputted a value of 0 rather than 1000 in a particular row by accident). 
+It further allows us check whether assumptions are satisfied (i.e., we can use QQ 
+plot to check for normality). This is known as exploratory visualization. Visualizing data 
+is also a great tool for communicating research findings to an audience (i.e., 
+statistical visualizations efficiently convey statistical information, and can be 
+used in communicating scientific research findings). 
+
+Specifically in the context of this assignment, we saw how summary stats (mean, SD, n), 
+as well Pearson's correlation coefficient were insufficient in communicating the same 
+information that data visualization did. The means, standard deviations, sizes, and correlation 
+coefficients (r) for each of the conditions were extremely similar. This further goes to show the 
+importance of visualizing data.
+
+Reference: Frank, M. C., Braginsky, M., Cachia, J., Coles, N. A., Hardwicke, T. E., Hawkins, R. D., Mathur, M. B., & Williams, R. (2025). Experimentology. https://experimentology.io/
