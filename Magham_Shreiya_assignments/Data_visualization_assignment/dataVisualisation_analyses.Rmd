@@ -182,12 +182,13 @@ such that others can follow along with what I'm doing much more easily. This pro
 a "reproducible workflow" which we learned was crucial for research. 
 
 I also learned about the basic principles of data visualization. For instance, I 
-learned I that I should be try to facilitate comparison between the various elements 
+learned I that I should try to facilitate comparison between the various elements 
 of my visualized data (for instance, I can vary the spatial/physical characteristics 
 of data points to facilitate people in making comparisons). I also learned that it is
 a good practice during data visualization to visualize variability (i.e., horizontal 
 and/or vertical 95% CI / SD error bars). I learned that ggplot is often great at being 
-minimalistic yet impactful in the presented data (which is another principle of data visualization). 
+minimalistic yet impactful in the presented data (which is another principle of data 
+visualization). 
 
 d. Why is it important to visualize data?
 
