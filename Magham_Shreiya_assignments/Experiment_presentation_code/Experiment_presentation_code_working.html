@@ -35,19 +35,16 @@ prevent delays in displaying the images during the experiment. */
 
   var preload = {
     type: jsPsychPreload,
-    images: ['stimuli/oasisStimuli/Angry face 2.jpg', 
-    'stimuli/oasisStimuli/Angry face 4.jpg', 
-    'stimuli/oasisStimuli/Depressed face 2.jpg', 
-    'stimuli/oasisStimuli/Sad face 1.jpg', 
-    'stimuli/oasisStimuli/Sad face 2.jpg', 
-    'stimuli/oasisStimuli/Sad face 3.jpg', 
-    'stimuli/oasisStimuli/Sad face 4.jpg', 
-    'stimuli/oasisStimuli/Sad face 6.jpg', 
-    'stimuli/oasisStimuli/Sad face 9.jpg', 
-    'stimuli/oasisStimuli/Scared face 1.jpg', 
-    'stimuli/oasisStimuli/Scared face 2.jpg', 
-    'stimuli/oasisStimuli/Scared face 4.jpg', 
-    'stimuli/oasisStimuli/Scared face 5.jpg']
+    images: ['stimuli/oasisStimuli/oasisControl/Angry face 2.jpg', 
+    'stimuli/oasisStimuli/oasisControl/Angry face 4.jpg', 
+    'stimuli/oasisStimuli/oasisControl/Depressed face 2.jpg', 
+    'stimuli/oasisStimuli/oasisControl/Sad face 4.jpg',
+    'stimuli/oasisStimuli/oasisControl/Scared face 2.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/angryFace2C.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/angryFace4C.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/depressedFace2C.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/sadFace4C.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/scaredFace2C.jpg']
   };
   
   timeline.push(preload);
@@ -71,7 +68,7 @@ terminated, and the participant will be brought to a screen thanking them for th
   var overview_and_mandatoryConsent = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<h2>Study Overview and Consent Form</h2>
-    <div style='width: 1000px;'><p><strong>Overview:</strong> This web-based study will ask you to rate various images of human faces on how emotionally ‘negative’ or ‘positive’ they are, on a scale of 1–7. Here, ratings of ‘1’ will indicate that you perceive the human face as extremely emotionally negative, while ratings of ‘7’ will indicate that you perceive the human face as extremely emotionally positive. This study is expected to take about 10–15 minutes to complete, including a 2-minute break that will occur after participants complete half of the trials. You will be asked to rate a total of 44 images during the actual experiment, and there will be 2 images presented prior to the experiment as a demonstration.</p>
+    <div style='width: 1000px;'><p><strong>Overview:</strong> This web-based study will ask you to rate various images of human faces on how emotionally negative or positive they are, on a scale of 1–7. Here, ratings of 1 will indicate that you perceive the human face as extremely emotionally negative, while ratings of 7 will indicate that you perceive the human face as extremely emotionally positive. This study is expected to take about 10–15 minutes to complete, including a 2-minute break that will occur after participants complete half of the trials. You will be asked to rate a total of 40 images during the actual experiment, and there will be 2 images presented prior to the experiment as a demonstration.</p>
     <p><strong>Potential Risks:</strong> The risks associated with participating in this study are extremely minimal. If you feel uncomfortable at any point during your participation, please know that you are always free to withdraw from the study. </p>
     <p><strong>Incentives:</strong> You will be compensated with $5 for your participation in the experiment.</p>
     <p><strong>Confidentiality:</strong> All of the data that is gathered from this study will be de-identified and completely anonymous. In our analyses after the data collection for this investigation is completed, we will only present the data in an aggregated form.</p>
@@ -121,8 +118,8 @@ of the choice they select). */
   var instructions = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<h2>Instructions</h2>
-    <div style='width: 800px;'><p>Expanding on the overview that was provided earlier, you will be asked to rate <strong>44 human face images</strong> on their how emotionally negative or positive you perceive them to be. You will be asked to rate these images on a scale of '1' to '7', with '1' being <strong>extremely negative</strong>, and <strong>'7'</strong> being <strong>extremely positive</strong>.</p>
-    <p>Each image or trial will be presented successively for you to rate, with only one trial appearing on subsequent screens. The trials will be split into <strong>2 blocks</strong>, so you'll essentially rate 22 images per block. There will be a short, <strong>2-minute break</strong> in between these 2 blocks. Prior to participating in the actual experiment, you'll be presented with 2 example images and rate them as a demo, so that you can gain a feel for what the experiment will be like. These two trials will <strong>not</strong> be included in the image rating data we will collect from you; only the data obtained from the 44 trials across the 2 experimental blocks will be recorded for our research.</p>
+    <div style='width: 800px;'><p>Expanding on the overview that was provided earlier, you will be asked to rate <strong>40 human face images</strong> on their how emotionally negative or positive you perceive them to be. You will be asked to rate these images on a scale of '1' to '7', with '1' being <strong>extremely negative</strong>, and <strong>'7'</strong> being <strong>extremely positive</strong>.</p>
+    <p>Each image or trial will be presented successively for you to rate, with only one trial appearing on subsequent screens. The trials will be split into <strong>2 blocks</strong>, so you'll essentially rate 20 images per block. There will be a short, <strong>2-minute break</strong> in between these 2 blocks. Prior to participating in the actual experiment, you'll be presented with 2 example images and rate them as a demo, so that you can gain a feel for what the experiment will be like. These two trials will <strong>not</strong> be included in the image rating data we will collect from you; only the data obtained from the 40 trials across the 2 experimental blocks will be recorded for our research.</p>
     <p>Please note that <strong>abstaining</strong> from rating any of the images will indicate <strong>withdrawal</strong> from the study.</p>
     <p><strong>Press the 'Continue' button below to proceed to the 2 demonstration trials.</p></strong></div>`,
     choices: [`<h2>Continue</h2>`]
@@ -147,7 +144,7 @@ expected to do during each trial of the real study). Values for the likert scale
   var demo_trial1 = {
     type: jsPsychSurveyLikert,
     questions: [
-      {prompt: `<img src='stimuli/oasisStimuli/Angry face 2.jpg'></img>`, 
+      {prompt: `<img src='stimuli/oasisStimuli/oasisDemo/Sad face 3.jpg'></img>`, 
       name: 'demoTrial1', 
       labels: likert_values}
       ],
@@ -159,7 +156,7 @@ expected to do during each trial of the real study). Values for the likert scale
   var demo_trial2 = {
     type: jsPsychSurveyLikert,
     questions: [
-      {prompt: `<img src='stimuli/oasisStimuli/Sad face 2.jpg'></img>`, 
+      {prompt: `<img src='stimuli/oasisStimuli/oasisDemo/Scared face 4.jpg'></img>`, 
       name: 'demoTrial2', 
       labels: likert_values}
       ],
@@ -174,8 +171,8 @@ be 2 blocks and prepares the participant for the real experiment. */
   var pre_block1 = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<p>Looks like you've got the hang of it!</p>
-    <p>Now, we will move on to the <strong>first block</strong> of the actual study. Once again, you will be asked to rate 22 images in this first block.</p>
-    <p>Then you will have a 2-minute break, which will be followed by a <strong>second block</strong> where you will be asked to rate another 22 images.</p>
+    <p>Now, we will move on to the <strong>first block</strong> of the actual study. Once again, you will be asked to rate 20 images in this first block.</p>
+    <p>Then you will have a 2-minute break, which will be followed by a <strong>second block</strong> where you will be asked to rate another 20 images.</p>
     <p><strong>Please press the 'Continue' button below when you are ready to begin the actual experiment.</strong></p>`,
     choices: [`<h2>Continue</h2>`]
   };
@@ -190,32 +187,31 @@ to prevent order effects. */
 /* These are all of the stimuli that will be employed for the trials. Participants will rate all of these images (within-subjects design) */
 
   const experiment_stimuli = [
-    {stim:`<img src="stimuli/oasisStimuli/Angry face 4.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Depressed face 2.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Sad face 1.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Sad face 3.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Sad face 4.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Sad face 6.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Sad face 9.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Scared face 1.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Scared face 2.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Scared face 4.jpg"></img>`},
-    {stim:`<img src="stimuli/oasisStimuli/Scared face 5.jpg"></img>`}
+    {stim:`<img src="stimuli/oasisStimuli/oasisControl/Angry face 2.jpg"></img>`},
+    {stim:`<img src="stimuli/oasisStimuli/oasisControl/Angry face 4.jpg"></img>`},
+    {stim:`<img src="stimuli/oasisStimuli/oasisControl/Depressed face 2.jpg"></img>`},
+    {stim:`<img src="stimuli/oasisStimuli/oasisControl/Sad face 4.jpg"></img>`},
+    {stim:`<img src="stimuli/oasisStimuli/oasisControl/Scared face 2.jpg"></img>`},
+    {stim:`<img src="stimuli/cartoonStimuli/cartoonControl/angryFace2C.jpg"></img>`},
+    {stim:`<img src="stimuli/cartoonStimuli/cartoonControl/angryFace4C.jpg"></img>`},
+    {stim:`<img src="stimuli/cartoonStimuli/cartoonControl/depressedFace2C.jpg"></img>`},
+    {stim:`<img src="stimuli/cartoonStimuli/cartoonControl/sadFace4C.jpg"></img>`},
+    {stim:`<img src="stimuli/cartoonStimuli/cartoonControl/scaredFace2C.jpg"></img>`}
     ];
     
 /* Here, we're randomizing the order in which the stimuli are presented. 
 No stimulus will be presented more than once (hence why we're using sample 
 without replacement). */ 
 
-  var all_randomized_stimuli = jsPsych.randomization.sampleWithoutReplacement(experiment_stimuli, 11);
+  var all_randomized_stimuli = jsPsych.randomization.sampleWithoutReplacement(experiment_stimuli, 10);
   
   
-/* Maintaining the randomized order of the stimuli in the 'all_randomized_stimuli,' we will split the stimuli into variables that split the stimuli into two blocks (randomized_block1 represents the first 22 stimuli from 'all_randomized_stimuli,' and randomized_block2 represents the last 22 stimuli). */
+/* Maintaining the randomized order of the stimuli in the 'all_randomized_stimuli,' we will split the stimuli into variables that split the stimuli into two blocks (randomized_block1 represents the first 20 stimuli from 'all_randomized_stimuli,' and randomized_block2 represents the last 20 stimuli). */
   
   var randomized_block1 = [(all_randomized_stimuli[0]), (all_randomized_stimuli[1]), (all_randomized_stimuli[2]), (all_randomized_stimuli[3]), (all_randomized_stimuli[4])
   ];
   
-  var randomized_block2 = [(all_randomized_stimuli[5]), (all_randomized_stimuli[6]), (all_randomized_stimuli[7]), (all_randomized_stimuli[8]), (all_randomized_stimuli[9]), (all_randomized_stimuli[10])
+  var randomized_block2 = [(all_randomized_stimuli[5]), (all_randomized_stimuli[6]), (all_randomized_stimuli[7]), (all_randomized_stimuli[8]), (all_randomized_stimuli[9])
   ];
   
 /* experimental trials */
@@ -239,7 +235,8 @@ without replacement). */
   
   timeline.push(block1);
   
-/* inter-block interval */
+/* inter-block interval (note: during debugging,
+    this interval will be only 15s to save time; it will be changed to 2 minutes later) */
 
   var inter_block_interval = {
     type: jsPsychHtmlKeyboardResponse,
@@ -247,7 +244,7 @@ without replacement). */
     <p>You completed the first block of the experiment.</p>
     <p>The 2-minute break between blocks 1 and 2 has commenced.</p>`,
     choices: "NO_KEYS",
-    trial_duration:120000
+    trial_duration:15000
   };
   
   timeline.push(inter_block_interval);
@@ -263,15 +260,14 @@ without replacement). */
     timeline.push(block2);
     
     
-/* Debrief trial */
+/* Debrief trial (note: talk more about caricaturization here, and the significance of the study / implications of H0 being rejected) */
 
   var debrief = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<h2>Experiment Debrief</h2>
       <div style='width: 800px;'><p>You have completed all of the experiment's trials!</p>
       <p>Now that you have finished participating in the study, we wanted to provide you with a quick debrief on the purpose of our study and how we aim to analyze collected data.</p>
-      <p>We designed this experiment to see whether <strong>exaggarating the angle of eyebrows</strong>, and the <strong>cartoonization</strong> of a human face, would affect people's perceptions of how 'negative' it is.</p>
-      <p>talk more about caricaturization here, and the significance of the study / implications of H0 being rejected</p></div>`,
+      <p>We designed this experiment to see whether <strong>exaggarating the angle of eyebrows</strong>, and the <strong>cartoonization</strong> of a human face, would affect people's perceptions of how 'negative' it is.</p></div>`,
     choices: [`<h2>End the Study</h2>`]
   };
   
