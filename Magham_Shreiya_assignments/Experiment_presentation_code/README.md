@@ -59,7 +59,7 @@ The study has a two-factor, *within-participants* design, and all participants w
       were included in the stimulus. This condition corresponds to the sub-folder 
       'oasisControl' in 'oasisStimuli'. n = 5. 
       
-      (b) a cartoon facial image stimulus condition, with no manipulations to eyebrow diagonality. This condition corresponds to the sub-folder 'cartoonControl' in 'cartoonStimuli'. n = 5.
+      (b) a cartoon facial image stimulus condition, with no manipulations to eyebrow diagonality. For cartoonifying the 5 realistic image stimuli from the OASIS database, I used the 'Cartoon1' effect on Picsart, with a fade of 50. This condition corresponds to the sub-folder 'cartoonControl' in 'cartoonStimuli'. n = 5.
       
       (c) a realistic facial image stimulus, 55 degrees from vertical eyebrow diagonality condition. n = 5.
       
