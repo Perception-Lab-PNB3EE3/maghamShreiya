@@ -16,13 +16,21 @@ The study has a two-factor, *within-participants* design, and all participants w
 > #### Components of the experiment
 
 (1) Welcome message
+
 (2) Overview of study
+
 (3) Ethics and consent
+
 (4) Instructions
+
 (5) Demo trials
-(6) Block 1 of the experiment (20 trials)
+
+(6) Block 1 of the experiment (15 trials)
+
 (7) Inter-block interval (2-minute break)
-(8) Block 2 of the experiment (20 trials)
+
+(8) Block 2 of the experiment (15 trials)
+
 (9) Debrief and thank you pages
 
 
@@ -37,9 +45,11 @@ The study has a two-factor, *within-participants* design, and all participants w
     Experiment_presentation_code_working.html are congruent. This folder 
     must be downloaded prior to running the experiment code html file in
     your browser. 
+    
 (2) **stimuli**: This folder contains the stimulus images for this study. It
     contains the sub-folders with stimuli from the different conditions. These
     experimental conditions include: 
+    
       (a) a realistic facial image stimulus control condition (i.e., the images are taken 
       right from the OASIS database.) Stimuli from the database were excluded if they did 
       not contain a singular, human face, included children (for ethical reasons around 
@@ -48,21 +58,20 @@ The study has a two-factor, *within-participants* design, and all participants w
       on the nomenclature of stimuli in the OASIS database), or if not all facial features 
       were included in the stimulus. This condition corresponds to the sub-folder 
       'oasisControl' in 'oasisStimuli'. n = 5. 
-      (b) a cartoon facial image stimulus condition, with no manipulations to eyebrow 
-      diagonality. This condition corresponds to the sub-folder 'cartoonControl' in 
-      'cartoonStimuli'. n = 5.
-      (c) a realistic facial image stimulus, 55 degrees from vertical eyebrow diagonality   
-      condition. n = 5.
-      (d) a cartoon facial image stimulus, 55 degrees from vertical eyebrow diagonality   
-      condition. n = 5.  
-      (e) a realistic facial image stimulus, 45 degrees from vertical eyebrow diagonality   
-      condition. n = 5.  
-      (f) a cartoon facial image stimulus, 45 degrees from vertical eyebrow diagonality   
-      condition. n = 5.
+      
+      (b) a cartoon facial image stimulus condition, with no manipulations to eyebrow diagonality. This condition corresponds to the sub-folder 'cartoonControl' in 'cartoonStimuli'. n = 5.
+      
+      (c) a realistic facial image stimulus, 55 degrees from vertical eyebrow diagonality condition. n = 5.
+      
+      (d) a cartoon facial image stimulus, 55 degrees from vertical eyebrow diagonality condition. n = 5.  
+      
+      (e) a realistic facial image stimulus, 45 degrees from vertical eyebrow diagonality condition. n = 5.  
+      
+      (f) a cartoon facial image stimulus, 45 degrees from vertical eyebrow diagonality condition. n = 5.
 
-    There is also a sub-folder under the 'oasisStimuli' folder that is entitled 'oasisDemo.'
-    These images will be used for the demo trials to get participants familiar with how the
-    experiment will run prior to the actual trials starting. n = 2.
+      There is also a sub-folder under the 'oasisStimuli' folder that is entitled     
+      'oasisDemo.' These images will be used for the demo trials to get participants 
+      familiar with how the experiment will run prior to the actual trials starting. n = 2.
 
 (3) **README.md**: Lastly, there is this README.md file that you're
     currently viewing. This file helps viewers understand the critical
@@ -81,5 +90,4 @@ The study has a two-factor, *within-participants* design, and all participants w
 (2) Click on the Experiment_presentation_code_working.html file. The experiment
     will open up in your web browser.
 
-(3) If you'd like to view the code, open the Experiment_presentation_code_working.html file 
-    in yourpreferred IDE.
+(3) If you'd like to view the code, open the Experiment_presentation_code_working.html file     in your preferred IDE.
