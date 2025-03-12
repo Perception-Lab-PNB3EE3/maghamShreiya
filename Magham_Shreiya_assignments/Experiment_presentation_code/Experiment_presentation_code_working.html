@@ -68,7 +68,7 @@ terminated, and the participant will be brought to a screen thanking them for th
   var overview_and_mandatoryConsent = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<h2>Study Overview and Consent Form</h2>
-    <div style='width: 1000px;'><p><strong>Overview:</strong> This web-based study will ask you to rate various images of human faces on how emotionally negative or positive they are, on a scale of 1–7. Here, ratings of 1 will indicate that you perceive the human face as extremely emotionally negative, while ratings of 7 will indicate that you perceive the human face as extremely emotionally positive. This study is expected to take about 10–15 minutes to complete, including a 2-minute break that will occur after participants complete half of the trials. You will be asked to rate a total of 40 images during the actual experiment, and there will be 2 images presented prior to the experiment as a demonstration.</p>
+    <div style='width: 1000px;'><p><strong>Overview:</strong> This web-based study will ask you to rate various images of human faces on how emotionally negative or positive they are, on a scale of 1–7. Here, ratings of 1 will indicate that you perceive the human face as extremely emotionally negative, while ratings of 7 will indicate that you perceive the human face as extremely emotionally positive. This study is expected to take about 10–15 minutes to complete, including a 2-minute break that will occur after participants complete half of the trials. You will be asked to rate a total of 30 images during the actual experiment, and there will be 2 images presented prior to the experiment as a demonstration.</p>
     <p><strong>Potential Risks:</strong> The risks associated with participating in this study are extremely minimal. If you feel uncomfortable at any point during your participation, please know that you are always free to withdraw from the study. </p>
     <p><strong>Incentives:</strong> You will be compensated with $5 for your participation in the experiment.</p>
     <p><strong>Confidentiality:</strong> All of the data that is gathered from this study will be de-identified and completely anonymous. In our analyses after the data collection for this investigation is completed, we will only present the data in an aggregated form.</p>
@@ -118,8 +118,8 @@ of the choice they select). */
   var instructions = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<h2>Instructions</h2>
-    <div style='width: 800px;'><p>Expanding on the overview that was provided earlier, you will be asked to rate <strong>40 human face images</strong> on their how emotionally negative or positive you perceive them to be. You will be asked to rate these images on a scale of '1' to '7', with '1' being <strong>extremely negative</strong>, and <strong>'7'</strong> being <strong>extremely positive</strong>.</p>
-    <p>Each image or trial will be presented successively for you to rate, with only one trial appearing on subsequent screens. The trials will be split into <strong>2 blocks</strong>, so you'll essentially rate 20 images per block. There will be a short, <strong>2-minute break</strong> in between these 2 blocks. Prior to participating in the actual experiment, you'll be presented with 2 example images and rate them as a demo, so that you can gain a feel for what the experiment will be like. These two trials will <strong>not</strong> be included in the image rating data we will collect from you; only the data obtained from the 40 trials across the 2 experimental blocks will be recorded for our research.</p>
+    <div style='width: 800px;'><p>Expanding on the overview that was provided earlier, you will be asked to rate <strong>30 human face images</strong> on their how emotionally negative or positive you perceive them to be. You will be asked to rate these images on a scale of '1' to '7', with '1' being <strong>extremely negative</strong>, and <strong>'7'</strong> being <strong>extremely positive</strong>.</p>
+    <p>Each image or trial will be presented successively for you to rate, with only one trial appearing on subsequent screens. The trials will be split into <strong>2 blocks</strong>, so you'll essentially rate 15 images per block. There will be a short, <strong>2-minute break</strong> in between these 2 blocks. Prior to participating in the actual experiment, you'll be presented with 2 example images and rate them as a demo, so that you can gain a feel for what the experiment will be like. These two trials will <strong>not</strong> be included in the image rating data we will collect from you; only the data obtained from the 30 trials across the 2 experimental blocks will be recorded for our research.</p>
     <p>Please note that <strong>abstaining</strong> from rating any of the images will indicate <strong>withdrawal</strong> from the study.</p>
     <p><strong>Press the 'Continue' button below to proceed to the 2 demonstration trials.</p></strong></div>`,
     choices: [`<h2>Continue</h2>`]
@@ -171,8 +171,8 @@ be 2 blocks and prepares the participant for the real experiment. */
   var pre_block1 = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<p>Looks like you've got the hang of it!</p>
-    <p>Now, we will move on to the <strong>first block</strong> of the actual study. Once again, you will be asked to rate 20 images in this first block.</p>
-    <p>Then you will have a 2-minute break, which will be followed by a <strong>second block</strong> where you will be asked to rate another 20 images.</p>
+    <p>Now, we will move on to the <strong>first block</strong> of the actual study. Once again, you will be asked to rate 15 images in this first block.</p>
+    <p>Then you will have a 2-minute break, which will be followed by a <strong>second block</strong> where you will be asked to rate another 15 images.</p>
     <p><strong>Please press the 'Continue' button below when you are ready to begin the actual experiment.</strong></p>`,
     choices: [`<h2>Continue</h2>`]
   };
@@ -206,7 +206,7 @@ without replacement). */
   var all_randomized_stimuli = jsPsych.randomization.sampleWithoutReplacement(experiment_stimuli, 10);
   
   
-/* Maintaining the randomized order of the stimuli in the 'all_randomized_stimuli,' we will split the stimuli into variables that split the stimuli into two blocks (randomized_block1 represents the first 20 stimuli from 'all_randomized_stimuli,' and randomized_block2 represents the last 20 stimuli). */
+/* Maintaining the randomized order of the stimuli in the 'all_randomized_stimuli,' we will split the stimuli into variables that split the stimuli into two blocks (randomized_block1 represents the first 15 stimuli from 'all_randomized_stimuli,' and randomized_block2 represents the last 15 stimuli). */
   
   var randomized_block1 = [(all_randomized_stimuli[0]), (all_randomized_stimuli[1]), (all_randomized_stimuli[2]), (all_randomized_stimuli[3]), (all_randomized_stimuli[4])
   ];
