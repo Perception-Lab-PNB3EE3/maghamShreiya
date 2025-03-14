@@ -13,14 +13,14 @@
 ### **Experiment Overview** 
 > #### The effect of the interaction between eyebrow diagonality and cartoonization of negative-affect facial image stimuli on valence perception
 
-Although the title of this web-based study is wordy, it is very simple. This experiment manipulates:
+Although the title of this web-based study is wordy, it is actually very simple. This experiment manipulates:
 
-(1) the **diagonality** of the eyebrows (i.e., the angle from vertical the eyebrows make, with the vertex of these two lines pointing downwards. Think of diagonality as the extent to which your eyebrows are furrowed or knitted together), and
+(1) the **diagonality** of the eyebrows (i.e., the angle from vertical that the eyebrows make, with the vertex of these two lines pointing downwards. Think of diagonality as the extent to which your eyebrows are furrowed or knitted together), and
 
 (2) the **cartoonization** (i.e., whether images are realistic or rendered in cartoon style)
 of negative-affect (or emotionally negative) facial image stimuli. Then, we will be able to look at the effect of the *interaction* between these two factors on the dependent variable of the participants' perceived emotional valence from the stimuli (i.e., how emotionally negative vs. positive the stimuli seem to them). The dependent variable will be rated on a slider scale that ranges from *extremely negative* to *extremely positive*.
 
-The study has a 2x2, *within-participants* design, and all participants will be required to rate the perceived emotional valence for each stimulus. The order of these stimuli (prior to creating the 2 blocks of trials) was randomized to prevent order effects. These stimuli from the 4 conditions (see 'stimuli' under the [below](#important-folders-and-files-in-the-experiment_presentation_code-folder) section) will be interspersed with filler images that participants will also rate, to prevent people from getting similar looking stimuli in succession (which could bias responses) and prevent gambler's fallacy-like effects that might arise from rating solely negative image stimuli.
+The study has a 2x2, *within-participants* design, and all participants will be required to rate the perceived emotional valence for each stimulus. The order of these stimuli (prior to creating the 2 blocks of trials) was randomized to prevent order effects. These stimuli from the 4 conditions (see 'stimuli' under the [below](#important-folders-and-files-in-the-experiment_presentation_code-folder) section) will be interspersed with filler images that participants will also rate, to prevent people from getting similar-looking stimuli in succession (which could bias responses) and prevent gambler's fallacy-like effects that might arise from rating solely negative image stimuli.
 
 > #### Components of the experiment
 
@@ -43,17 +43,17 @@ The study has a 2x2, *within-participants* design, and all participants will be 
 (9) Debrief and thank you pages
 
 
-*Note:* These are essentially the trials that you will find within the experiment code html file. 
+*Note:* These are essentially the trials that you will find within the experiment code HTML file. 
 To get to this file, use the following pathway: 'maghamShreiya' \> 'Magham_Shreiya_assignments' 
 \> 'Experiment_presentation_code' \> 'Experiment_presentation_code_assignment.html'.
 
 
 ### **Important Folders and Files in the 'Experiment_presentation_code' Folder**
 
-(1) **jspsych**: This folder contains downloaded/imported jsPsych
+(1) **jsPsych**: This folder contains downloaded/imported jsPsych
     library scripts. It is crucial that the name of this folder and 
     'Experiment_presentation_code_assignment.html' are congruent. This folder 
-    must be downloaded prior to running the experiment code html file in
+    must be downloaded prior to running the experiment code HTML file in
     your browser. 
     
 (2) **stimuli**: This folder contains the stimulus images for this study. It
@@ -77,14 +77,14 @@ To get to this file, use the following pathway: 'maghamShreiya' \> 'Magham_Shrei
   *n* = 5.
       
   (c) a realistic facial image stimulus condition, with a 50-degrees-from-vertical eyebrow 
-  diagonality manipulation (RE condition). This manipulation on the realistic images from the 
-  OASIS database was done using 'ibisPaint' with the 'lasso' and 'tranform' tools for 
+  diagonality or angle manipulation (RE condition). This manipulation of the realistic images from the 
+  OASIS database was done using 'ibisPaint' with the 'lasso' and 'transform' tools for 
   manipulating the angle of the eyebrows. Empty spaces were filled in with the 'Soft Pastel' 
   brush at 30% opacity. Angles were measured using a protractor. This condition corresponds 
   to the sub-folder 'oasisEyebrow' in 'oasisStimuli.' *n* = 5.
       
   (d) a realistic facial image stimulus condition, with a 50-degrees-from-vertical eyebrow 
-  diagonality manipulation (CE condition). This manipulation on images from the OASIS 
+  diagonality manipulation (CE condition). This manipulation of images from the OASIS 
   database that were cartoonized was done using 'ibisPaint' (same procedure as the 
   RE condition). This condition corresponds to the sub-folder 'cartoonEyebrow' in 
   'cartoonStimuli.' *n* = 5.  
@@ -106,7 +106,7 @@ To get to this file, use the following pathway: 'maghamShreiya' \> 'Magham_Shrei
     
     
 ### **Significance of Study**
-Exaggarated features and cartoonization are key components of the artistic technique 
+Exaggerated features and cartoonization are key components of the artistic technique 
 called **caricaturization**. It is important that we better understand the effect of 
 caricaturization on our perceptions of emotional valence because caricaturization 
 is used for conveying highly influential messages (i.e., in the case of political 
@@ -130,5 +130,5 @@ images of human faces.
     file in your preferred IDE.
     
 ### **References**
-Russell, J. A. (1980). A circumplex model of affect. *Journal of personality and social psychology*, 
+Russell, J. A. (1980). A circumplex model of affect. *Journal of Personality and Social Psychology*, 
     *39*(6), 1161-1178. https://doi.org/10.1037/h0077714
