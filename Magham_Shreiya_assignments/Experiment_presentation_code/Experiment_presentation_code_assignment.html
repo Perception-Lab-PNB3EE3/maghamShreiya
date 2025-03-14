@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Caricature Valence Experiment</title>
+      <!-- Here, we're loading in jsPsych as well as the plugins that will be 
+      used throughout this web experiment's code. The jsPsych plugins that this 
+      experiment will use include: the preload plugin, the html-button-response 
+      plugin, the survey-multi-choice plugin, the image-slider-response plugin, 
+      and the html-keyboard-response plugin --->
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="jspsych/plugin-html-button-response.js"></script>
+    <script src="jspsych/plugin-survey-multi-choice.js"></script>
+    <script src="jspsych/plugin-image-slider-response.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body></body>
+  <script>
+
+//////////INITIALIZE JSPSYCH AND CREATING TIMELINE//////////
+
+/* Initialze jsPsych and create timeline (for pushing the trials). 
+The on_finish data will be used for debugging the experiment during 
+development, and to ensure the correct data is being recorded
+(i.e., participants' valence ratings for each of the stimuli / the data 
+from the slider scale responses, as well as their image paths). */
+
+  var timeline = [];
+
+  const jsPsych = initJsPsych({
+    on_finish: function() {
+      jsPsych.data.get().localSave('csv', 'caricature_valence_data.csv');
+    }
+  });
+  
+//////////PRELOAD IMAGES//////////
+
+/* Preloading all of the image stimuli and images(from their respective image 
+pathways). This will prevent delays in displaying the images during the experiment. */
+
+  var preload = {
+    type: jsPsychPreload,
+    images: ['stimuli/oasisStimuli/oasisDemo/Demo1.jpg',
+    'stimuli/oasisStimuli/oasisDemo/Demo2.jpg',
+    'stimuli/oasisStimuli/oasisControl/RC1.jpg', 
+    'stimuli/oasisStimuli/oasisControl/RC2.jpg', 
+    'stimuli/oasisStimuli/oasisControl/RC3.jpg', 
+    'stimuli/oasisStimuli/oasisControl/RC4.jpg',
+    'stimuli/oasisStimuli/oasisControl/RC5.jpg',
+    'stimuli/oasisStimuli/oasisEyebrow/RE1.jpg', 
+    'stimuli/oasisStimuli/oasisEyebrow/RE2.jpg', 
+    'stimuli/oasisStimuli/oasisEyebrow/RE3.jpg', 
+    'stimuli/oasisStimuli/oasisEyebrow/RE4.jpg',
+    'stimuli/oasisStimuli/oasisEyebrow/RE5.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/CC1.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/CC2.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/CC3.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/CC4.jpg',
+    'stimuli/cartoonStimuli/cartoonControl/CC5.jpg',
+    'stimuli/cartoonStimuli/cartoonEyebrow/CE1.jpg',
+    'stimuli/cartoonStimuli/cartoonEyebrow/CE2.jpg',
+    'stimuli/cartoonStimuli/cartoonEyebrow/CE3.jpg',
+    'stimuli/cartoonStimuli/cartoonEyebrow/CE4.jpg',
+    'stimuli/cartoonStimuli/cartoonEyebrow/CE5.jpg',
+    'stimuli/fillerImages/Filler1.jpg',
+    'stimuli/fillerImages/Filler2.jpg',
+    'stimuli/fillerImages/Filler3.jpg',
+    'stimuli/fillerImages/Filler4.jpg',
+    'stimuli/fillerImages/Filler5.jpg',
+    'stimuli/fillerImages/Filler6.jpg',
+    'stimuli/fillerImages/Filler7.jpg',
+    'stimuli/fillerImages/Filler8.jpg',
+    'stimuli/fillerImages/Filler9.jpg',
+    'stimuli/fillerImages/Filler10.jpg',
+    'stimuli/fillerImages/Filler11.jpg',
+    'stimuli/fillerImages/Filler12.jpg',
+    'stimuli/fillerImages/Filler13.jpg',
+    'stimuli/fillerImages/Filler14.jpg',
+    'stimuli/fillerImages/Filler15.jpg',
+    'stimuli/fillerImages/Filler16.jpg',
+    'stimuli/fillerImages/Filler17.jpg',
+    'stimuli/fillerImages/Filler18.jpg',
+    'stimuli/fillerImages/Filler19.jpg',
+    'stimuli/fillerImages/Filler20.jpg'
+    ]
+  };
+  
+  timeline.push(preload);
+
+//////////WELCOME SCREEN TRIAL//////////
+
+/* Creating a welcome screen trial. This will include a simple message welcoming 
+the participant to the study, and prompt them to continue to the next page (button 
+response). */
+
+  var welcome = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<h2>Welcome!</h2>
+    <p>Please press the 'Continue' button to read the instructions for this study.</p>`,
+    choices: [`<h2>Continue</h2>`]
+  };
+
+  timeline.push(welcome);
+  
+//////////OVERVIEW AND CONSENT TRIALS//////////  
+
+/* Creating an overview and consent page trial. This trial will contain a broad 
+overview of the study, and ask whether the participant consents to participating. 
+(Note: if the participant indicates 'I Do Not Consent,' then the experiment will be 
+terminated, and the participant will be brought to a screen thanking them for their 
+interest in the study). */
+
+  var overview_and_mandatoryConsent = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<h2>Study Overview and Consent Form</h2>
+    <div style='width: 1000px;'><p><strong>Overview:</strong> This web-based study 
+    will ask participants to rate various images of human faces on how emotionally 
+    negative or positive they are. The experiment is expected to take <10 minutes 
+    to complete. Participants will rate 40 images during the experiment.</p>
+    <p><strong>Potential Risks:</strong> The risks associated with participating in 
+    this study are minimal. If you feel uncomfortable at any point during your participation, 
+    please know that you are always free to withdraw from the study.</p>
+    <p><strong>Incentives:</strong> You will be compensated with $5 for completing the study.</p>
+    <p><strong>Confidentiality:</strong> All of the data gathered from this 
+    study will be de-identified and completely anonymous. In our analyses after the 
+    data collection for this investigation is completed, we will only present the data 
+    in an aggregated form.</p>
+    <p>Moving forward with participating in this study requires that you consent to this 
+    study’s researchers being able to access the unidentifiable, aggregated data that 
+    will be generated through your participation. However, consent for the use of your 
+    de-identified, aggregated data in scientific and educational contexts is optional, 
+    and you will still be able to participate in the study; your data simply will be 
+    excluded from these settings.</p>
+    <p><strong>Participation and Withdrawal:</strong> Participation in this study is 
+    completely voluntary, and you may choose to withdraw at any point prior to the completion 
+    of the experiment. Should you withdraw, all of your response data will be erased. 
+    Please note that responses cannot be withdrawn once the study is completed, 
+    due to the anonymous, de-identified nature of the data.</p>
+    <p><strong>Ethics Review:</strong> This study has been reviewed and cleared by the 
+    Ethics Board for PNB 3EE3.</p>
+    <p><strong>Contact:</strong> If you have any questions, comments, or concerns about 
+    participating in the study, please contact maghams@mcmaster.ca.</p>
+    <p><strong>Consent:</strong> After reading all of the above information about the study, 
+    do you consent to participating in this study, in addition to allowing the researchers to 
+    access the de-identified, anonymous data that will be generated from your 
+    participation?</p></div>`,
+    choices: [`<h2>I Consent</h2>`, `<h2>I Do Not Consent</h2>`],
+    on_finish: function(data){
+      if(data.response == 1) {
+        jsPsych.abortExperiment(`
+        <h2>Study Terminated</h2>
+        <div style='width: 800px;'><p>This experiment has ended since you indicated not consenting 
+        to participating. Thank you for your interest! Please contact maghams@mcmaster.ca if you 
+        have any questions, comments, or concerns.</p></div>`)
+      }
+    }
+  };
+
+  timeline.push(overview_and_mandatoryConsent); 
+
+/* Creating a trial with optional consent questions (participants can choose to either 
+opt-in or opt-out, and they'll be able to voluntarily participate in the study regardless
+of the choice they select). */
+
+  var consent_optional = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt: `<div style='width: 800px;'><div style='float: left;'><p>Do you consent 
+        for the de-identified data generated from your participation in this experiment 
+        to be used in <strong>scientific conferences</strong> or in <strong>scientific 
+        journals</strong> (it would be presented in aggregate)?</p></div>`,
+        name: 'consentOptional1',
+        options: ["Yes", "No"],
+        required: true
+      },
+      {
+        prompt: `<div style='width: 800px;'><div style='float: left;'><p>Do you consent 
+        for the de-identified data generated from your participation in this experiment 
+        to be used in <strong>educational settings</strong> (again, it would be presented 
+        in aggregate)?</p></div>`,
+        name: 'consentOptional2',
+        options: ["Yes", "No"],
+        required: true
+      }
+    ],
+    button_label: "Continue"
+  };
+
+  timeline.push(consent_optional);
+  
+//////////INSTRUCTIONS PAGE//////////
+  
+/* Creating an instruction page trial, to re-iterate what the participant will do during 
+the experiment. */
+
+  var instructions = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<h2>Instructions</h2>
+    <div style='width: 800px;'><p>You will be asked to rate <strong>40 images of human 
+    faces</strong> on how emotionally negative or positive you perceive them to be, on 
+    a scale that ranges from <strong>extremely negative</strong> to <strong>extremely 
+    positive</strong>.</p>
+    <p>Each image will be presented on their own screen for you to rate.</p>
+    <p>Trials will be split into <strong>2 blocks</strong>; you'll rate 20 
+    images per block. There will be a short, <strong>30-second break</strong> in 
+    between the 2 blocks.</p>
+    <p>Right before the actual experiment, you'll be presented with 2 sample 
+    images and rate them as a demonstration. These two trials will <strong>not</strong> 
+    be included in the image rating data we will collect from you; only the data obtained 
+    from the 2 experimental blocks will be recorded for our research.</p>
+    <p>Please note that <strong>abstaining</strong> from rating any of the images (i.e., 
+    exiting out of the screen) will indicate <strong>withdrawal</strong> from the study.</p>
+    <p><strong>Press the 'Continue' button below to proceed to the 2 demonstration 
+    trials.</p></strong></div>`,
+    choices: [`<h2>Continue</h2>`]
+  };
+  
+  timeline.push(instructions);
+  
+
+//////////DEMONSTRATION TRIALS//////////
+
+/* Creating the demonstration trial (this will be done to walk the participants 
+through what they'll be expected to do during each trial of the real study). */ 
+  
+  var demo_trial1 = {
+    type: jsPsychImageSliderResponse,
+    stimulus: 'stimuli/oasisStimuli/oasisDemo/Demo1.jpg',
+    labels: ['Extremely negative', 'Neutral','Extremely positive'],
+    min: -100,
+    max: 100,
+    slider_start: 0,
+    step: 1,
+    require_movement: true,
+    stimulus_height: 400,
+    maintain_aspect_ration: true,
+    post_trial_gap: 100
+  };  
+  
+  timeline.push(demo_trial1); 
+
+  var demo_trial2 = {
+    type: jsPsychImageSliderResponse,
+    stimulus: 'stimuli/oasisStimuli/oasisDemo/Demo2.jpg',
+    labels: ['Extremely negative', 'Neutral','Extremely positive'],
+    min: -100,
+    max: 100,
+    slider_start: 0,
+    step: 1,
+    require_movement: true,
+    stimulus_height: 400,
+    maintain_aspect_ration: true,
+    post_trial_gap: 100
+  };
+
+  timeline.push(demo_trial2); 
+
+/* Creating a trial between the demo trial and the first block of the actual 
+expertiment. This trial signals that the real experiment will begin shortly. */
+
+  var pre_block1 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p>Looks like you've got the hang of it!</p>
+    <p>Now, we will move on to the <strong>first block</strong> of the actual study. 
+    Once again, you will be asked to rate 20 images in this first block.</p>
+    <p>Then you will have a 30-second break, which will be followed by a <strong>second 
+    block</strong> where you will be asked to rate another 20 images.</p>
+    <p><strong>Press the 'Continue' button below when you are ready to begin the 
+    actual experiment.</strong></p>`,
+    choices: [`<h2>Continue</h2>`],
+    post_trial_gap: 1000
+  };
+
+  timeline.push(pre_block1);
+  
+  
+//////////EXPERIMENTAL TRIALS//////////
+
+/* This is where the *actual* experiment trials begin. The experiment trials will 
+consist of two blocks, with an inter-block break screen or interval trial that will 
+last for 30 seconds. Before coding the blocks, the order of stimulus presentation 
+has been randomized to prevent order effects. */
+
+/* These are all of the stimuli that will be employed for the trials. 
+Participants will rate ALL of these images (within-subjects design). */
+
+  const experiment_stimuli = [
+      {stim:"stimuli/oasisStimuli/oasisControl/RC1.jpg", name: "controlReal"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC2.jpg", name: "controlReal"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC3.jpg", name: "controlReal"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC4.jpg", name: "controlReal"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC5.jpg", name: "controlReal"},
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE1.jpg", name: "eyebrowReal"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE2.jpg", name: "eyebrowReal"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE3.jpg", name: "eyebrowReal"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE4.jpg", name: "eyebrowReal"},
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE5.jpg", name: "eyebrowReal"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC1.jpg", name: "controlCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC2.jpg", name: "controlCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC3.jpg", name: "controlCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC4.jpg", name: "controlCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC5.jpg", name: "controlCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE1.jpg", name: "eyebrowCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE2.jpg", name: "eyebrowCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE3.jpg", name: "eyebrowCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE4.jpg", name: "eyebrowCartoon"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE5.jpg", name: "eyebrowCartoon"}
+      ];
+      
+/* These are filler images that will be interspersed with the actual stimuli from the
+4 conditions (i.e., RC, CC, RE, CE). This is to prevent influences from prior ratings of
+similar-looking stimuli, as well as prevent gambler's fallacy-like effects where participants 
+give a positive rating for negative images simply because they have done a bunch of
+negative ratings. */
+      
+    const experiment_filler = [{stim:"stimuli/fillerImages/Filler1.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler2.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler3.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler4.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler5.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler6.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler7.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler8.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler9.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler10.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler11.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler12.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler13.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler14.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler15.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler16.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler17.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler18.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler19.jpg", name: "filler"},
+      {stim:"stimuli/fillerImages/Filler20.jpg", name: "filler"}
+    ];
+    
+/* Here, we're randomizing the order in which the stimuli are presented to prevent 
+order effects. No stimulus will be presented more than once (hence why we're using 
+the jsPsych 'sample without replacement' function). */ 
+
+  var randomized_stimuli = jsPsych.randomization.sampleWithoutReplacement(experiment_stimuli, 20);
+  
+  var randomized_filler = jsPsych.randomization.sampleWithoutReplacement(experiment_filler, 20);
+
+/* Maintaining the  order of the stimuli in the 'randomized_stimuli' and 'randomized_filler,' 
+we will split the stimuli and filler images into variables for two blocks (block1_images 
+represents the first 20 interspersed 'randomized_stimuli' and 'randomized_filler' images, 
+and block2_images represents the last 20 images). */
+  
+  var block1_images = [(randomized_stimuli[0]), (randomized_filler[0]), (randomized_stimuli[1]), (randomized_filler[1]), (randomized_stimuli[2]), (randomized_filler[2]), (randomized_stimuli[3]), (randomized_filler[3]), (randomized_stimuli[4]), (randomized_filler[4]), (randomized_stimuli[5]), (randomized_filler[5]), (randomized_stimuli[6]), (randomized_filler[6]), (randomized_stimuli[7]), (randomized_filler[7]), (randomized_stimuli[8]), (randomized_filler[8]), (randomized_stimuli[9]), (randomized_filler[9])
+  ];
+  
+  var block2_images = [(randomized_stimuli[10]), (randomized_filler[10]), (randomized_stimuli[11]), (randomized_filler[11]), (randomized_stimuli[12]), (randomized_filler[12]), (randomized_stimuli[13]), (randomized_filler[13]), (randomized_stimuli[14]), (randomized_filler[14]), (randomized_stimuli[15]), (randomized_filler[15]), (randomized_stimuli[16]), (randomized_filler[16]), (randomized_stimuli[17]), (randomized_filler[17]), (randomized_stimuli[18]), (randomized_filler[18]), (randomized_stimuli[19]), (randomized_filler[19])];
+  
+/* Defining the experimental trial (will be repeated for all of the images in
+blocks 1 and 2). */
+  
+  var experiment_trial = {
+    type: jsPsychImageSliderResponse,
+    stimulus: jsPsych.timelineVariable('stim'),
+    labels: ['Extremely negative', 'Neutral','Extremely positive'],
+    min: -100,
+    max: 100,
+    slider_start: 0,
+    step: 1,
+    require_movement: true,
+    stimulus_height: 400,
+    maintain_aspect_ration: true,
+    post_trial_gap: 200,
+    data: {
+      task: 'rating',
+      name: jsPsych.timelineVariable('name'),
+    }
+  };
+
+/* Block 1 - here, we're making a timeline for block 1's experimental trials,
+with the timeline_variables set to block1_images from earlier. */
+
+  var block1_trials = {
+    timeline: [experiment_trial],
+    timeline_variables: block1_images,
+    randomize_order: false
+  };
+  
+  timeline.push(block1_trials);
+  
+/* Creating an inter-block interval (30 seconds) */
+
+  var inter_block_interval = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<h2>Break!</h2>
+    <p>You completed the first block of the experiment.</p>
+    <p>The 30-second break between blocks 1 and 2 has commenced.</p>`,
+    choices: "NO_KEYS",
+    trial_duration: 30000
+  };
+  
+  timeline.push(inter_block_interval);
+  
+/* Block 2 - here, we're making a timeline for block 2's experimental trials,
+with the timeline_variables set to block2_images from earlier. */
+
+  var block2_trials = {
+    timeline: [experiment_trial],
+    timeline_variables: block2_images,
+    randomize_order: false
+  };
+  
+    timeline.push(block2_trials);
+    
+//////////DEBRIEF AND THANK YOU SCREENS//////////
+
+/* Debrief trial - this trial will detail the signficance of the experiment, and tell the particiapnts their average ratings for each condition (so that they'd be able to get an idea of their performance) */
+
+  var debrief = {
+    type: jsPsychHtmlButtonResponse,
+    choices: [`<h2>End the Study</h2>`],
+    stimulus: `<h2>Experiment Debrief</h2>
+      <div style='width: 800px;'><p>You have completed all of this experiment's trials!</p>
+      <p>Now that you have finished participating in the study, we wanted to provide you with a quick debrief on the purpose of our study and how we aim to analyze collected data.</p>
+      <p>We designed this experiment to see whether <strong>exaggarating the angle of eyebrows</strong>, and the <strong>cartoonization</strong> of a human face, 
+      would affect people's perceptions of how 'negative' it is.</p>
+      <p>Exaggarated features and cartoonization are key components of the artistic technique of <strong>caricaturization</strong>. It is important that we better understand the 
+      effect of caricaturization on our perception of emotion because caricaturization is used for conveying influential messages (such as in the case of political cartoons). 
+      Since caricaturization is often used to 
+      convey messages that are negative in nature, we manipulated the eyebrow angles and cartoonization of negative faces. Your ratings for these images will be used for 
+      our research.</p></div>`
+  };
+  
+    timeline.push(debrief);
+      
+/* Creating a thank you trial to display a message that asks participants to reach out 
+if they're interested in the results of the study, and to thank them for participating */
+     
+  var thank_you = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p><strong>Thank you for your participation in this study!</strong></p>
+    <p>Please contact us by email (maghams@mcmaster.ca) if you'd like 
+    to leave any comments, questions, or concerns about the study.</p>
+    <p>Additionally, reach out to us by email if you'd like to be notified 
+    about the findings of the study once our analyses are complete.</p>
+    <p>You may now exit out of this screen. (Note: This screen will disappear 
+    in 30 seconds). </p>`,
+    choices: "NO_KEYS",
+    trial_duration:30000
+  };
+  
+    timeline.push(thank_you);
+    
+/* Run experiment using the jsPsych.run function */
+  jsPsych.run(timeline);
+  
+//  jsPsych.simulate(timeline)
+    
+  </script>
+</html>
