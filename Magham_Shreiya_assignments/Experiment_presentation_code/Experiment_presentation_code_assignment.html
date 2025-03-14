@@ -24,7 +24,8 @@
 The on_finish data will be used for debugging the experiment during 
 development, and to ensure the correct data is being recorded
 (i.e., participants' valence ratings for each of the stimuli / the data 
-from the slider scale responses, as well as their image paths). */
+from the slider scale responses, as well as their image paths and 
+image names). */
 
   var timeline = [];
 
@@ -287,26 +288,26 @@ has been randomized to prevent order effects. */
 Participants will rate ALL of these images (within-subjects design). */
 
   const experiment_stimuli = [
-      {stim:"stimuli/oasisStimuli/oasisControl/RC1.jpg", name: "controlReal"},
-      {stim:"stimuli/oasisStimuli/oasisControl/RC2.jpg", name: "controlReal"},
-      {stim:"stimuli/oasisStimuli/oasisControl/RC3.jpg", name: "controlReal"},
-      {stim:"stimuli/oasisStimuli/oasisControl/RC4.jpg", name: "controlReal"},
-      {stim:"stimuli/oasisStimuli/oasisControl/RC5.jpg", name: "controlReal"},
-      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE1.jpg", name: "eyebrowReal"}, 
-      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE2.jpg", name: "eyebrowReal"}, 
-      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE3.jpg", name: "eyebrowReal"}, 
-      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE4.jpg", name: "eyebrowReal"},
-      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE5.jpg", name: "eyebrowReal"},
-      {stim:"stimuli/cartoonStimuli/cartoonControl/CC1.jpg", name: "controlCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonControl/CC2.jpg", name: "controlCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonControl/CC3.jpg", name: "controlCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonControl/CC4.jpg", name: "controlCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonControl/CC5.jpg", name: "controlCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE1.jpg", name: "eyebrowCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE2.jpg", name: "eyebrowCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE3.jpg", name: "eyebrowCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE4.jpg", name: "eyebrowCartoon"},
-      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE5.jpg", name: "eyebrowCartoon"}
+      {stim:"stimuli/oasisStimuli/oasisControl/RC1.jpg", name: "RC1"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC2.jpg", name: "RC2"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC3.jpg", name: "RC3"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC4.jpg", name: "RC4"},
+      {stim:"stimuli/oasisStimuli/oasisControl/RC5.jpg", name: "RC5"},
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE1.jpg", name: "RE1"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE2.jpg", name: "RE2"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE3.jpg", name: "RE3"}, 
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE4.jpg", name: "RE4"},
+      {stim:"stimuli/oasisStimuli/oasisEyebrow/RE5.jpg", name: "RE5"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC1.jpg", name: "CC1"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC2.jpg", name: "CC2"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC3.jpg", name: "CC3"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC4.jpg", name: "CC4"},
+      {stim:"stimuli/cartoonStimuli/cartoonControl/CC5.jpg", name: "CC5"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE1.jpg", name: "CE1"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE2.jpg", name: "CE2"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE3.jpg", name: "CE3"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE4.jpg", name: "CE4"},
+      {stim:"stimuli/cartoonStimuli/cartoonEyebrow/CE5.jpg", name: "CE5"}
       ];
       
 /* These are filler images that will be interspersed with the actual stimuli from the
@@ -371,7 +372,6 @@ blocks 1 and 2). */
     maintain_aspect_ration: true,
     post_trial_gap: 200,
     data: {
-      task: 'rating',
       name: jsPsych.timelineVariable('name'),
     }
   };
@@ -413,20 +413,25 @@ with the timeline_variables set to block2_images from earlier. */
     
 //////////DEBRIEF AND THANK YOU SCREENS//////////
 
-/* Debrief trial - this trial will detail the signficance of the experiment, and tell the particiapnts their average ratings for each condition (so that they'd be able to get an idea of their performance) */
+/* Debrief trial - this trial will detail the signficance of the experiment, and tell the particiapnts their 
+average ratings for each condition (so that they'd be able to get an idea of their performance) */
 
   var debrief = {
     type: jsPsychHtmlButtonResponse,
     choices: [`<h2>End the Study</h2>`],
     stimulus: `<h2>Experiment Debrief</h2>
       <div style='width: 800px;'><p>You have completed all of this experiment's trials!</p>
-      <p>Now that you have finished participating in the study, we wanted to provide you with a quick debrief on the purpose of our study and how we aim to analyze collected data.</p>
-      <p>We designed this experiment to see whether <strong>exaggarating the angle of eyebrows</strong>, and the <strong>cartoonization</strong> of a human face, 
-      would affect people's perceptions of how 'negative' it is.</p>
+      <p>Now that you have finished participating in the study, we wanted to provide you with a 
+      quick debrief on the purpose of our study and how we aim to analyze collected data.</p>
+      <p>We designed this experiment to see whether <strong>exaggarating the angle of eyebrows</strong>, 
+      and the <strong>cartoonization</strong> of a human face, would affect people's perceptions 
+      of how 'negative' it is.</p>
       <p>Exaggarated features and cartoonization are key components of the artistic technique of <strong>caricaturization</strong>. It is important that we better understand the 
-      effect of caricaturization on our perception of emotion because caricaturization is used for conveying influential messages (such as in the case of political cartoons). 
-      Since caricaturization is often used to 
-      convey messages that are negative in nature, we manipulated the eyebrow angles and cartoonization of negative faces. Your ratings for these images will be used for 
+      effect of caricaturization on our perception of emotion because caricaturization
+      is used for conveying influential messages (such as in the case of political cartoons). 
+      Since caricaturization is often used to convey messages that are negative in 
+      nature, we manipulated the eyebrow angles and cartoonization of negative faces. 
+      Your ratings for these images will be used for 
       our research.</p></div>`
   };
   
@@ -442,18 +447,18 @@ if they're interested in the results of the study, and to thank them for partici
     to leave any comments, questions, or concerns about the study.</p>
     <p>Additionally, reach out to us by email if you'd like to be notified 
     about the findings of the study once our analyses are complete.</p>
-    <p>You may now exit out of this screen. (Note: This screen will disappear 
-    in 30 seconds). </p>`,
+    <p>You may now exit out of this screen. (Note: this screen will disappear 
+    in 15 seconds). </p>`,
     choices: "NO_KEYS",
-    trial_duration:30000
+    trial_duration:15000
   };
   
     timeline.push(thank_you);
     
 /* Run experiment using the jsPsych.run function */
-  jsPsych.run(timeline);
+// jsPsych.run(timeline);
   
-//  jsPsych.simulate(timeline)
+  jsPsych.simulate(timeline)
     
   </script>
 </html>
