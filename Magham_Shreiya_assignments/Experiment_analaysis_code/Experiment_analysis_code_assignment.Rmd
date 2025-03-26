@@ -1,0 +1,285 @@
+---
+title: "Experiment Analysis Code"
+output: html_notebook
+---
+## *Caricature Valence* Study
+
+### Overview: 
+This experiment analysis code is designed to perform statistical analyses on simulated data from the 'Caricature Valence' study (please navigate to the `maghamShreiya` repository \> `Magham_Shreiya_assignments` \> `Experiment_presentation_code` to learn more about the study). Here, I used set.seed(1) prior to simulating the distributions for each of the 4 conditions to ensure that all simulated data are reproducible.
+
+During actual data collection, it is crucial that the `.csv` file(s) containing the **participant valence rating data** and their corresponding **stimulus names** are properly read-in. This will enable that the outcome measure (participant valence responses) for can be combined by condition (i.e., the 4 conditions: RC, CC, RE, CE; see README.md in aforementioned `Experiment_presentation_code` folder). You will need to extract the data for valence ratings from the cells in the `.csv` file(s) for the trials of each *experimental* condition (not filler trials). Anyone with access to your `.csv` data file(s) should be able to replicate the results or statistical analyses on their *own* machine using the below analysis code.
+
+```{r}
+# first, remove all objects in the workspace environment:
+rm(list=ls())
+
+# load in the necessary R packages that we will need later. (note: make sure you have these packages installed):
+library(tidyverse)
+library(ggplot2) # for data visualization
+library(rstatix) # statistical analyses (rmANOVA)
+library(afex) # statistical analyses (rmANOVA)
+library(scales) # for data visualization
+
+```
+
+
+### Simulating participant caricature valence rating data:
+
+```{r}
+#### SIMULATING THE DATA ####
+
+n <- 100 #sample size (simulated number of participants)
+
+# number of conditions:
+nConditions <- 4
+
+# labels for the conditions (note: these labels will be named intuitively/meaningfully to enable clearer data visualization. The RC condition will be called "Realistic-Control," the CC condition will be called "Cartoon-Control," the RE condition will be called "Realistic-Eyebrow Manipulation," and the CE condition will be called "Cartoon-Eyebrow Manipulation"):
+
+conditionLabels <- c("Realistic-Control", "Cartoon-Control", "Realistic-Eyebrow Manipulation", "Cartoon-Eyebrow Manipulation")
+
+# Individual labels by factor (Cartoonization, Eyebrow Diagonality) - this will be useful for the rmANOVA that will be run later
+
+cartoonizationLabels <- c("Realistic","Cartoon")
+diagonalityLabels <- c("Control", "Eyebrow Manipulation")
+
+# creating random normal distributions for the outcome measure (participants' valence responses). The rnorm() function will be used for this:
+
+set.seed(1) # set.seed() function will ensure that this simulated data is reproducible by anyone
+responseDistributionRC <- rnorm(n, mean = -39, sd = 12) # simulated response distribution mean for realistic-control condition will be around -39 (least negative mean of all the conditions). It is acceptable for the values to be continuous (even though the actual slider scale responses in the caricature study are integer values only) because this dataset represents the MEAN valence response across all 5 images in the RC condition. This applies to the rest of the conditions as well.
+
+set.seed(1)
+responseDistributionCC <- rnorm(n, mean = -47, sd = 18) #simulated response distribution mean for cartoon-control condition will be around -47.
+
+set.seed(1)
+responseDistributionRE <- rnorm(n, mean = -43, sd = 13) #simulated response distribution mean for the realistic-eyebrow manipulation condition will be around -43.
+
+set.seed(1)
+responseDistributionCE <- rnorm(n, mean = -63, sd = 15) #simulated response distribution mean for the cartoon-control condition will be around -63 (most negative mean for all of the conditions).
+
+responseDist <- c(rbind(responseDistributionRC, responseDistributionCC, responseDistributionRE, responseDistributionCE)) # using the rbind() condition so that we can assign each "participant" in the simulated dataframe values from each of the 4 conditions (datasets from the distributions above)
+
+#making data frame with simulated data for outcome measure and conditions:
+simulatedData <- data.frame(Participant = rep(1:n, each = nConditions), #each participant does each condition (within-participants design)
+                            Condition = rep(conditionLabels, times = n), #this will repeat the 4 Condition labels for all 100 participants
+                            Cartoonization = rep(cartoonizationLabels, times = n), #this will repeat the 2 cartoonization labels for all 100 participants
+                            Diagonality = rep(diagonalityLabels, each = 2, times = n/2), #this will repeat the 2 diagonality labels for all 100 participants
+                            Responses = responseDist, #outcome measures / responses will be simulated such that there is a different mean for each condition (more in line with the hypothesis, with the CE condition having the most negative mean response, and the RC condition have the least negative mean response; see above for the distributions)
+                            stringsAsFactors = TRUE) # this ensures that the Conditions are treated as factors rather than as strings
+
+```
+
+
+### Descriptive Statistics:
+
+Here, we will look at the entire 'simulatedData' dataframe, and the condition sizes, means, SDs, and variance (mean, and SD values should be close to the ones we set earlier using the rnorm() function and for the n variable, but perhaps not exact due to the sample size):
+
+```{r}
+
+simulatedData # outputs the entire 'simulatedData' dataframe.
+summary(simulatedData) # outputs the summary statistics for each of the columns in the dataframe (this includes the Participant, Condition, Cartoonization, Diagonality and Responses columns). Can ensure that the data types are "factors" rather than "characters" for the Condition, Cartoonization, and Diagonality columns.
+
+with(simulatedData, tapply(Responses, Condition, length)) # n = 100.
+means <- with(simulatedData, tapply(Responses, Condition, mean)) # mean valence response, by condition. We're saving this under the variable 'means' for later use in the post-hoc Fisher's LSD test and data visualization.
+print(means)
+SDs <- with(simulatedData, tapply(Responses, Condition, sd)) # SDs for valence responses, by condition. We're saving this under the variable 'SDs' for later use in data visualization.
+print(SDs)
+with(simulatedData, tapply(Responses, Condition, var)) # variances of valence responses, by condition.
+```
+
+### Inferential Statistics:
+
+Here, we will do a two-way repeated-measures ANOVA. 
+
+Before that, it is important to check that the data obtained satisfies the assumptions for a 2x2 rmANOVA (i.e., normality, random selection from population). 
+
+After the rmANOVA, we will find the main effects of each condition (cartoonization and eyebrow diagonality of negative-affect human face stimuli; see README.md in `Experiment_presentation_code` folder for more information). We will also do pairwise comparisons (Fisher's LSD / least significant differences test) to find any interaction effects. We will also determine the effect sizes (generalized eta square for main effects, and Cohen's d for the interaction effects) for each of these comparisons.
+
+
+```{r}
+#### ASSUMPTION TESTS ####
+
+# The assumption of participants being randomly-selected from the population of interest should be satisfied prioir to continuing with the rmANOVA (which it has been in the simulated data).
+
+# Even though we used rnorm() to simulate the data, we're going to check for the NORMALITY assumption here (for the sake of statistical analysis of actual, collected data). To do this, the Shapiro-Wilk normality test will be used for each of the conditions and the overall responses:
+
+shapiro.test(responseDistributionRC) # W = 0.9956, p-value = 0.9876; fail to reject null. 
+qqnorm(responseDistributionRC)
+qqline(responseDistributionRC)
+
+shapiro.test(responseDistributionCC) # W = 0.9956, p-value = 0.9876; fail to reject null.
+
+shapiro.test(responseDistributionRE) # W = 0.9956, p-value = 0.9876; fail to reject null. 
+
+shapiro.test(responseDistributionCE) # W = 0.9956, p-value = 0.9876; fail to reject null. 
+
+# The data is ~normally distributed. The assumption of normality is satisfied here for the simulated data.
+
+#### rmANOVA TESTS ####
+
+# With this first anova_test() function we will also obtain the actual F-statistics for the two-factor rmANOVA test, as well as the actual p-values (main effects, and interaction effect). 
+
+data1 <- simulatedData #saving the simulatedData to a different variable so that we can manipulate it while leaving the original data intact
+data1$Participant <- as.factor(data1$Participant) # saving Participant as a factor for the rmANOVA 
+
+rmANOVA <- anova_test(
+  data = data1, # the dataframe we're using for the rmANOVA test
+  dv = Responses, # outcome measure / dependent variable = Responses
+  wid = Participant, # identifier = Participant
+  within = c(Cartoonization, Diagonality), #specifying the 2 WITHIN-subject factors
+  )
+print(rmANOVA)
+
+# ANOVA table for determining MS error (so that we don't need to calculate it manually) - the above table did not have the MS error and df error values which are necessary for the post-hoc Fisher's LSD tests, but contain the exact p-values. So, this table will also be used for obtaining MS error:
+
+rmANOVA_MSE <- data1 %>%
+  afex::aov_4(Responses ~ 1 + (Cartoonization*Diagonality | Participant), data = .)
+
+print(rmANOVA_MSE)
+
+# with the above simulated data, there are main effects of stimulus cartoonization and eyebrow diagonality on the outcome measure (as indicated by the statistically significant p-values of 1.37*10^-60 for the main effect of Cartoonization (η²G = 0.211) and 2.75*10^-106 for the main effect of Diagonality (η²G = 0.129)). There are also interaction effects between cartoonization and eyebrow diagonality on the dependent variable of participants' perceived stimulus valence, as indicated by a statistically significant p-value of 4.10*10^-57.
+
+
+#### POST-HOC FISHER'S LSD AND EFFECT SIZES ####
+
+# Since the ANOVA is an omnibus test, we need to do additional pairwise comparisons to find where the differences actually are
+
+MSerror <- 3.23 #this needs to be manually inputted from the second ANOVA table from above (rmANOVA_MSE)
+dfError <- 99 #this too should be manually inputted from the first or second ANOVA table (rmANOVA or rmANOVA_MSE). Otherwise, it can also be calculated using the formula (n-1)*(r-1)*(c-1), where n represents the number of participants in the sample, r represents the number levels in one factor, and c represents the number of levels in the other factor
+#n has been defined earlier (100 for the simulated dataset)
+
+# Fisher's LSD test function:
+LSDtest <- function(mean1, mean2, n, MSerror, dfError) {
+  t <- (mean1 - mean2) / sqrt(MSerror * (2 / n))
+  p <- pt(abs(t), dfError, lower.tail = F) * 2
+  print(c("Fisher's LSD test, t = ", as.numeric(signif(t, 4))))
+  print(c("Fisher's LSD test, p = ", as.numeric(signif(p, 4))))
+}
+
+# c = 4*3 / 2 = 6 comparisons being done here
+
+# bonferroni correction (since k = 4) for determining the per-comparison alpha level:
+alpha_pc <- 0.05 / 6 # since c = 6 comparisons
+# per-comparison alpha level = 0.008333333 (This means that the LSD test pairwise comparisons must have a p-value that is lower than ~0.0083. This will reduce the likelihood of there being type I errors)
+
+# note: it is important that we saved the means for each of the 4 conditions earlier under the variable 'means' here for the LSD test:
+
+LSDtest(means[1], means[2], n, MSerror, dfError) # significant difference (t = 64.24, p = 1.629*10^-82) - comparing 'Cartoon-Control' and 'Cartoon-Eyebrow Manipulation' conditions
+LSDtest(means[3], means[1], n, MSerror, dfError) # significant difference (t = 28.91, p = 4.645*10^-50) - comparing 'Realistic-Control' and 'Cartoon-Control' conditions
+LSDtest(means[4], means[1], n, MSerror, dfError) # significant difference (t = 13.6, p = 2.241*10^-24) - comparing 'Realistic-Eyebrow Manipulation' and 'Cartoon-Control' conditions
+LSDtest(means[4], means[2], n, MSerror, dfError) # significant difference (t = 77.83, p = 1.31*10^-90) - comparing 'Realistic-Eyebrow Manipulation' and 'Cartoon-Eyebrow Manipulation' conditions
+LSDtest(means[3], means[2], n, MSerror, dfError) # significant difference (t = 93.14, p = 3.164*10^-98) - comparing 'Realistic-Control' and 'Cartoon-Eyebrow Manipulation' conditions
+LSDtest(means[4], means[3], n, MSerror, dfError) # significant difference (t = -15.31, p = 7.523*10^-28) - comparing 'Realistic-Eyebrow Manipulation' and 'Realistic-Control' conditions
+
+# Effect sizes: 
+# Now, we'll find the effect sizes (Cohen's d) for each of these pairwise comparisons
+
+# Cohen's d formula: abs(mean1-mean2)/sqrt(MSerror)
+
+d1 <- abs((means[1] - means[2])/(sqrt(MSerror))) # d = 9.084398
+d2 <- abs((means[3] - means[1])/(sqrt(MSerror))) # d = 4.0878
+d3 <- abs((means[4] - means[1])/(sqrt(MSerror))) # d = 1.922727 
+d4 <- abs((means[4] - means[2])/(sqrt(MSerror))) # d = 11.00712
+d5 <- abs((means[3] - means[2])/(sqrt(MSerror))) # d = 13.1722 
+d6 <- abs((means[4] - means[3])/(sqrt(MSerror))) # d = 2.165073
+
+# The results from the pairwise comparisons done on the simulated data from the 4 datasets indicate that there are statistically significant differences between each of the conditions, and that these differences are all extremely meaningful (indicated by the extremely large effect sizes / Cohen's d values).
+
+```
+
+
+### Data visualization:
+
+Here, we will look at the density distributions for the 4 conditions. We will also make a bar plot to visualize the means of the 4 conditions.
+
+```{r}
+#### GRAPH 1 ####
+
+# This density distribution will show the distribution of the dataset for each of the data points. All of the distributions should look approximately like a normal distribution for the simulated data since rnorm() was used.
+
+# filtering by condition:
+graph1_RC <- filter(data1, Condition == "Realistic-Control")
+graph1_CC <- filter(data1, Condition == "Cartoon-Control")
+graph1_RE <- filter(data1, Condition == "Realistic-Eyebrow Manipulation")
+graph1_CE <- filter(data1, Condition == "Cartoon-Eyebrow Manipulation")
+
+# making the density distribution plot (Graph 1):
+graph1 <- ggplot() +
+  geom_density(aes(Responses, fill = "Realistic-Control"), alpha = 0.4, data = graph1_RC) +
+  geom_density(aes(Responses, fill = "Cartoon-Control"), alpha = 0.4, data = graph1_CC) + 
+  geom_density(aes(Responses, fill = "Realistic-Eyebrow Manipulation"), alpha = 0.4, data = graph1_RE) +
+  geom_density(aes(Responses, fill = "Cartoon-Eyebrow Manipulation"), alpha = 0.4, data = graph1_CE) + 
+  scale_fill_manual(name = "Legend", values = c("Realistic-Control" = "lightgray", "Cartoon-Control" = "lightblue", "Realistic-Eyebrow Manipulation" = "steelblue", "Cartoon-Eyebrow Manipulation" = "navyblue"))+
+  theme_bw() + 
+  labs(
+    title = "Density Distributions for Valence Ratings, by Condition",
+    x = "Valence Rating Response",
+    y = "Density", 
+    color="Gears") +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13))
+
+print(graph1)
+
+#### GRAPH 2 ####
+# This bar plot will display the means for the 4 conditions, and will contain standard deviation error bars:
+
+# creating variables for the SDs for each of the conditions - this will be useful for making the error bars (SD error bars):
+SD_RC <- 10.77839
+SD_CC <- 16.16759
+SD_RE <- 11.67659
+SD_CE <- 13.47299
+  
+# creating variables for the means for each of the conditions - this will be useful for graphing and making the error bars.
+meanRC <- -37.69335
+meanCC <- -45.04003
+meanRE <- -41.58446
+meanCE <- -61.36669
+
+meanValues <- c(meanRC, meanCC, meanRE,meanCE) # put the means for each of the conditions in the order of the RC condition, CC condition, RE condition, and CE condition. This will be helpful in plotting the data in the desired order.
+
+graph2_dataframe <- data.frame(conditions = c("Realistic-Control", "Cartoon-Control", "Realistic-Eyebrow \n Manipulation", "Cartoon-Eyebrow \n Manipulation"), 
+                               mean = c(meanValues)) # making a dataframe that will be used in visualizing the means valence ratings for each condition
+
+graph2 <- ggplot(graph2_dataframe, aes(x=conditions,y=mean)) +
+  geom_col(fill = "lightblue",colour="black") +
+  theme_bw() + 
+  labs(
+    title = "Mean Participant Valence Ratings, by Condition",
+    x = "Condition",
+    y = "Mean Valence Rating Response", 
+    color="Gears"
+  ) +
+  theme(
+    plot.title = element_text(face="bold", size="13", hjust=0.5),
+    axis.text.y = element_text(size=10),
+    axis.text.x = element_text(size=10),
+    axis.title.x=element_text(face="bold", size=13),
+    axis.title.y=element_text(face="bold", size=13)) +
+  scale_x_discrete(limits=graph2_dataframe$conditions)+
+  geom_errorbar(data=subset(graph2_dataframe,graph2_dataframe$conditions=="Realistic-Control"),
+                aes(ymin=(meanRC-SD_RC), ymax=(meanRC+SD_RC)), width=0.07,
+                position=position_dodge(0.9),col="black")+
+  geom_errorbar(data=subset(graph2_dataframe,graph2_dataframe$conditions=="Cartoon-Control"),
+                aes(ymin=(meanCC-SD_CC), ymax=(meanCC+SD_CC)), width=0.07,
+                position=position_dodge(0.9),col="black")+
+  geom_errorbar(data=subset(graph2_dataframe,graph2_dataframe$conditions=="Realistic-Eyebrow \n Manipulation"),
+                aes(ymin=(meanRE-SD_RE), ymax=(meanRE+SD_RE)), width=0.07,
+                position=position_dodge(0.9),col="black")+
+  geom_errorbar(data=subset(graph2_dataframe,graph2_dataframe$conditions=="Cartoon-Eyebrow \n Manipulation"),
+                aes(ymin=(meanCE-SD_CE), ymax=(meanCE+SD_CE)), width=0.07,
+                position=position_dodge(0.9),col="black") + 
+  coord_cartesian(ylim = c(-80, -3.62))
+
+print(graph2)
+
+```
+
+### Simulated Data Results (Overall):
+
+There are significant main effects of stimulus cartoonization and stimulus eyebrow diagonality on participants' valence rating responses.
+
+There are significant interaction effects between stimulus cartoonization and stimulus eyebrow diagonality on participants' valence rating responses.
